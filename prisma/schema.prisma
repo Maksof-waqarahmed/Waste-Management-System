@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id             String            @id @default(uuid())
+  firstName      String
+  lastName       String
+  email          String            @unique
+  phone          String
+  password       String
+  profileImg     String?
+  isDeleted      Boolean           @default(false)
+  isVerified     Boolean           @default(false)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @default(now())
+  report         Reports[]
+  reward         Rewards[]
+  collectedWaste CollectedWastes[]
+  notification   Notifications[]
+  transaction    Transactions[]
+  roles          ROLE
+  sessions       Sessions[]
+
+  @@map("users")
+}
+
+model Sessions {
+  id           String   @id @default(uuid())
+  sessionToken String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
+  user         Users    @relation(fields: [userId], references: [id])
+  userId       String   @unique
+
+  @@map("sessions")
+}
+
+model Reports {
+  id                 String   @id @default(uuid())
+  user               Users    @relation(fields: [userId], references: [id])
+  userId             String   @unique
+  location           String
+  wasteType          String
+  amount             Int
+  imgURL             String
+  status             STATUS
+  collectorID        String
+  createdAt          DateTime @default(now())
+  verificationResult Json 
+
+  @@map("reports")
+}
+
+model Rewards {
+  id             String   @id @default(uuid())
+  user           Users    @relation(references: [id], fields: [userId])
+  userId         String   @unique
+  points         Int      @default(0)
+  createdAt      DateTime @default(now())
+  updateAt       DateTime @default(now())
+  isAvailable    Boolean  @default(true)
+  description    String
+  name           String
+  collectionInfo String
+
+  @@map("rewards")
+}
+
+model CollectedWastes {
+  id             String   @id @default(uuid())
+  user           Users    @relation(references: [id], fields: [collectorId])
+  collectorId    String   @unique
+  collectionDate DateTime @default(now())
+  status         STATUS
+
+  @@map("collected-wastes")
+}
+
+model Notifications {
+  id        String   @id @default(uuid())
+  user      Users    @relation(fields: [userId], references: [id])
+  userId    String   @unique
+  message   String
+  type      String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("notification")
+}
+
+model Transactions {
+  id          String   @id @default(uuid())
+  user        Users    @relation(fields: [userId], references: [id])
+  userId      String   @unique
+  type        String
+  amount      Int
+  description String
+  date        DateTime @default(now())
+
+  @@map("transaction")
+}
+
+enum STATUS {
+  PENDING
+  COMPLETED
+}
+
+enum ROLE {
+  USER
+  ADMIN
+}
