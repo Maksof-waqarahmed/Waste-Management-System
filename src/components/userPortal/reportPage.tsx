@@ -13,6 +13,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+} from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Card } from "../ui/card";
 import { useState } from "react";
@@ -20,8 +28,8 @@ import { VerifyingImage } from "./verifyingImage";
 
 const formSchema = z.object({
   location: z.string({ required_error: "Location is required" }),
-  wasteType: z.string().optional(), // Optional if value is provided in state
-  estimatedAmount: z.string().optional(), // Optional if value is provided in state
+  wasteType: z.string().optional(),
+  estimatedAmount: z.string().optional(),
 });
 
 type reportForm = z.infer<typeof formSchema>;
@@ -51,7 +59,7 @@ export function ReportPage() {
       <Card className="max-w-full mx-auto p-6 mb-10">
         <VerifyingImage />
       </Card>
-      <Card className="p-5 grid md:grid-cols-2 grid-cols-1 ">
+      <Card className="p-5 grid grid-cols-1">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -97,11 +105,39 @@ export function ReportPage() {
               )}
             />
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              Submit
-            </Button>
+            <div className="w-full flex justify-end">
+              <Button type="submit" className="w-36" disabled={loading}>
+                Submit
+              </Button>
+            </div>
           </form>
         </Form>
+      </Card>
+      <h1 className="text-3xl font-semibold mb-6 text-green-700 text-center mt-5">
+        Recent Reports
+      </h1>
+      <Card className="w-full p-4">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[500px]">Location</TableHead>
+              <TableHead className="w-[500px]">Waste Type</TableHead>
+              <TableHead className="">Estimated Amount</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow >
+              <TableCell className="font-medium">Orangi Town</TableCell>
+              <TableCell>Waste</TableCell>
+              <TableCell>12000</TableCell>
+            </TableRow>
+            <TableRow >
+              <TableCell className="font-medium">Orangi Town</TableCell>
+              <TableCell>Waste</TableCell>
+              <TableCell>12000</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
       </Card>
     </div>
   );
