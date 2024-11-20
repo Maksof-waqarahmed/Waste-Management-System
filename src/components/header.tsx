@@ -134,7 +134,7 @@ const Header = () => {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem  className="font-medium">
-                  <Link href={"/auth/profile"}>Profile</Link>
+                  <Link href={"/user-profile"}>Profile</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem  className="font-medium">
                   <Link href={"/auth/setting"}>Setting</Link>
