@@ -6,17 +6,16 @@ import logo from "../../../assets/Images/logo.png";
 
 const Page = () => {
   return (
-    <div className="flex flex-col md:flex-row">
-      <div className="w-full md:w-[60%] p-5 md:h-[800px]">
+    <div className="flex flex-col md:flex-row lg:p-0 p-5 items-center justify-evenly">
+      <div className="w-full p-4 md:w-[60%] md:h-[800px] hidden lg:block">
         <Image
           src={logo}
-          width={180}
+          width={150}
           height={44}
-          alt=""
-          className="mx-auto md:mx-0"
+          alt=""  
         />
 
-        <h1 className="md:text-3xl text-xl font-bold mb-3 md:pl-10 text-justify	">
+        <h1 className="md:text-3xl text-xl font-bold  md:pl-10 text-justify	">
           Join Our Waste Management System – Make Your Environment Cleaner!
         </h1>
         <p className="mb-3 md:pl-10 font-semibold md:text-lg text-base text-justify	">
@@ -59,8 +58,8 @@ const Page = () => {
         </ul>
       </div>
 
-      <div className="w-full md:w-auto md:p-5">
-        <Card className="p-8 rounded-2xl max-w-[550px] w-full font-heading md:m-10 m-5">
+      <div className="w-full md:w-auto">
+        <Card className="p-8 rounded-2xl max-w-[550px] w-full font-heading">
           <div className="flex items-center">
             <Image
               src={logo}

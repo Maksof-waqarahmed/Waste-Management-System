@@ -16,43 +16,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import PasswordInput from "../passwordInput";
 import Link from "next/link";
 import bcrypt from "bcrypt";
+import { registerSchema } from "@/app/auth/auth-schema";
+import { Card } from "../ui/card";
 
-const formSchema = z.object({
-  firstName: z
-    .string({ message: "First Name is required" })
-    .min(2, { message: "Minimum 2 char required" }),
-  lastName: z
-    .string({ message: "Last Name is required" })
-    .min(2, { message: "Minimum 2 char required" }),
-  email: z.string({ message: "Email is required" }).email({
-    message: "Invalid email format, Please enter a valid email address.",
-  }),
-  password: z
-    .string({ message: "Password is required" })
-    .min(8, { message: "Password must be at least 8 characters long" })
-    .regex(/[a-z]/, {
-      message: "Password must contain at least one lowercase letter",
-    })
-    .regex(/[A-Z]/, {
-      message: "Password must contain at least one uppercase letter",
-    })
-    .regex(/[0-9]/, { message: "Password must contain at least one number" })
-    .regex(/[\W_]/, {
-      message: "Password must contain at least one special character",
-    }),
-  phoneNo: z
-    .string({ message: "Phone No is required" })
-    .regex(/^\d+$/, { message: "Phone no must contain only numbers" }),
-});
-
-type UserFormValue = z.infer<typeof formSchema>;
+type UserFormValue = z.infer<typeof registerSchema>;
 
 const RegistrationForm = () => {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<UserFormValue>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(registerSchema),
     mode: "onChange",
   });
   async function onSubmit(data: UserFormValue) {
@@ -61,7 +35,7 @@ const RegistrationForm = () => {
 
     setLoading(true);
     try {
-      const res = await fetch("/api/users", {
+      const res = await fetch("/api/auth/sign-up", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,8 +45,6 @@ const RegistrationForm = () => {
       if (!res.ok) {
         throw new Error("Failed to create user");
       }
-      const result = await res.json();
-      console.log("User created:", result);
       setIsSubmitted(true);
     } catch (error) {
       console.error("Error creating user:", error);
@@ -84,6 +56,29 @@ const RegistrationForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-5">
+        {isSubmitted && (
+          <div className="w-full p-2 text-center  rounded-lg shadow-md border-2 border-green-600">
+          <h1 className="text-[25px] font-bold text-green-700">
+            Welcome to WMS!
+          </h1>
+          <p className="mt-2 text-lg text-gray-700">
+            Thank You for Registering!
+          </p>
+          <p className="my-3 text-sm text-gray-500">
+            Didn’t receive the email? Check your spam folder or{" "}
+            <a href="/resend-verification" className="text-green-700 underline text-lg">
+              resend the verification link
+            </a>
+            .
+          </p>
+          <a href="/auth/login" className="mt-2 inline-block">
+            <button className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 transition">
+              Back to Login
+            </button>
+          </a>
+        </div>
+        )}
+
         <div className="">
           <FormField
             control={form.control}
