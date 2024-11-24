@@ -346,7 +346,7 @@ export const passwordResetTempEmail = (firstName: string, lastName: string) => {
         <img src="https://via.placeholder.com/120?text=WMS+Logo" alt="WMS Logo" class="email-logo">
         <h1 class="email-title">Password Reset Successful</h1>
         <p class="email-content">
-            Dear <strong>${customerName}</strong>,<br><br>
+            Dear <strong>${firstName + " " + lastName}</strong>,<br><br>
             Your password has been successfully reset. You can now use your new password to log in to the Waste Management System.
         </p>
         <p class="email-content">
