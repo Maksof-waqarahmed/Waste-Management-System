@@ -22,7 +22,7 @@ model Users {
   isBlocked      Boolean           @default(false)
   isVerified     Boolean           @default(false)
   createdAt      DateTime          @default(now())
-  updatedAt      DateTime
+  updatedAt      DateTime?
   report         Reports[]
   reward         Rewards[]
   collectedWaste CollectedWastes[]
@@ -38,7 +38,7 @@ model Sessions {
   id           String   @id @default(uuid())
   sessionToken String
   createdAt    DateTime @default(now())
-  updatedAt    DateTime 
+  updatedAt    DateTime
   user         Users    @relation(fields: [userId], references: [id])
   userId       String   @unique
 

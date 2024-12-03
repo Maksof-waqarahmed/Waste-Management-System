@@ -66,9 +66,9 @@ const Page = () => {
               width={120}
               height={44}
               alt=""
-              className="mt-[-20px] ml-[-27px]"
+              className="mt-[-20px] ml-[-27px] w-20 h-20 md:w-[120px] md:h-[120px]"
             />
-            <h3 className="md:text-3xl font-bold mb-5 text-[#027C05] text-2xl">
+            <h3 className="md:text-3xl font-bold mb-5 text-[#027C05] text-xl">
               Waste Management System
             </h3>
           </div>
