@@ -4,13 +4,13 @@ import { Session } from "../trpc/auth/user/index";
 import { ZodError } from "zod";
 
 export const createTRPCContext = async (opts: {
-  // headers: Headers;
-  session: Session | null;
+  headers: Headers;
+  // session: Session | null;
 }) => {
-  const session = opts.session;
+  // const session = opts.session;
 
   return {
-    session,
+    // session,
     prisma,
   };
 };

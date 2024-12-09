@@ -8,13 +8,13 @@ import { cache } from "react";
  */
 
 
-const _headers = cache(async ()=> headers())
+const _headers = cache(async () => headers())
 const createContext = cache(async () => {
   const heads = new Headers(await _headers());
-//   heads.set("x-trpc-source", "rsc");
-//   heads.set("portal", "customer");
+  heads.set("x-trpc-source", "rsc");
+  heads.set("portal", "user");
   return createTRPCContext({
-    session: await auth(),
+    // session: await auth(),
     headers: heads,
   });
 });

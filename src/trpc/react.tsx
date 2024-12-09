@@ -4,12 +4,11 @@
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
-  loggerLink,
   TRPCClientError,
   unstable_httpBatchStreamLink,
 } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
-import { AppRouter } from "@/app/trpc";
+import type { AppRouter } from "@/app/trpc";
 // import { toast } from "sonner";
 
 export const api = createTRPCReact<AppRouter>();
@@ -59,6 +58,8 @@ export function TRPCReactProvider(props: {
     }),
   );
 
+  // console.log(getBaseUrl() + "/api/trpc");
+
   return (
     <QueryClientProvider client={queryClient}>
       <api.Provider client={trpcClient} queryClient={queryClient}>
@@ -71,7 +72,7 @@ export function TRPCReactProvider(props: {
 function getBaseUrl() {
   if (typeof window !== "undefined") return window.location.origin;
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  return `http://localhost:${process.env.PORT ?? 3001}`;
+  return `http://localhost:${process.env.PORT ?? 3000}`;
 }
 
 function handleErrorOnClient(error: unknown): boolean {
@@ -82,6 +83,6 @@ function handleErrorOnClient(error: unknown): boolean {
     return true;
   }
 
-//   toast.error(error.message.slice(0, 50) + "...");
+  //   toast.error(error.message.slice(0, 50) + "...");
   return true;
 }
