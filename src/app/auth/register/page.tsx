@@ -1,4 +1,4 @@
-import RegistrationForm from "@/components/auth/userRegistrationForm";
+import RegistrationForm from "@/components/auth/user-registration-form";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import React from "react";

@@ -1,4 +1,4 @@
-import VerifyEmail from "@/components/auth/verify-email-screen";
+import VerifyEmail from "@/components/auth/verify-email-form";
 import { Card } from "@/components/ui/card";
 import React from "react";
 

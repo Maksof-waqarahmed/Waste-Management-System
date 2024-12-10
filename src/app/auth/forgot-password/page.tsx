@@ -1,4 +1,4 @@
-import ForgotPassword from "@/components/auth/forgot-passwordForm";
+import ForgotPassword from "@/components/auth/forgot-password-form";
 import {
   Card,
   CardContent,

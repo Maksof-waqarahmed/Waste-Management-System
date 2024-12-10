@@ -2,7 +2,7 @@ import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import React from "react";
 import logo from '../../../assets/Images/logo.png'
-import LoginForm from "@/components/auth/userLoginForm";
+import LoginForm from "@/components/auth/user-login-form";
 const Page = () => {
   return (
     <div className="flex items-center justify-center h-screen bg-gradient-to-b from-green-300 to-green-100">

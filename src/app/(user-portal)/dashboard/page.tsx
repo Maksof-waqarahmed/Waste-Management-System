@@ -1,4 +1,4 @@
-import { BarCharts } from "@/components/charts/barChart";
+import { BarCharts } from "@/components/charts/bar-chart";
 import { PieCharts } from "@/components/charts/pie-chart";
 import { ReportColumn } from "@/components/reportTable/column";
 import { DataTable } from "@/components/shared/data-table";
