@@ -16,9 +16,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import PasswordInput from "../password-input";
 import Link from "next/link";
 import bcrypt from "bcrypt";
-import { registerSchema } from "@/app/auth/auth-schema";
 import { Card } from "../ui/card";
-import { api } from "@/trpc/react";
+import { api } from "@/trpc-server/react";
+import { registerSchema } from "@/schemas";
 
 type UserFormValue = z.infer<typeof registerSchema>;
 
