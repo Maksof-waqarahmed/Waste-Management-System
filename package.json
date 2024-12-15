@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "push": "prisma db push"
+    "push": "pnpm prisma db push"
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
@@ -30,6 +30,7 @@
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "framer-motion": "^11.14.4",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.446.0",
     "next": "14.2.13",
@@ -40,6 +41,7 @@
     "react-hook-form": "^7.53.0",
     "react-hot-toast": "^2.4.1",
     "recharts": "^2.13.0",
+    "sonner": "^1.7.1",
     "tailwind-merge": "^2.5.3",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"

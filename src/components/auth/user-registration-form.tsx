@@ -15,8 +15,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import PasswordInput from "../password-input";
 import Link from "next/link";
-import bcrypt from "bcrypt";
-import { Card } from "../ui/card";
 import { api } from "@/trpc-server/react";
 import { registerSchema } from "@/schemas";
 
@@ -24,24 +22,49 @@ type UserFormValue = z.infer<typeof registerSchema>;
 
 const RegistrationForm = () => {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [userEmail, setUserEmail] = useState<string>("");
 
-  const {mutateAsync: createUser, isLoading} =  api.userAuth.create.useMutation();
+  const { mutateAsync: createUser, isLoading } =
+    api.userAuth.create.useMutation();
 
+  const { mutateAsync: sendEmailAgain } =
+    api.userAuth.sendAgainEmail.useMutation();
 
   const form = useForm<UserFormValue>({
     resolver: zodResolver(registerSchema),
     mode: "onChange",
   });
   async function onSubmit(data: UserFormValue) {
-    const res = await createUser({
-      email: data.email,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      password: data.password,
-      phoneNo: data.phoneNo,
-    })
-    console.log("res", res);
+    try {
+      const res = await createUser({
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        password: data.password,
+        phoneNo: data.phoneNo,
+      });
+      setUserEmail(data.email);
+      form.reset({
+        email: "",
+        firstName: "",
+        lastName: "",
+        password: "",
+        phoneNo: "",
+      });
+      setIsSubmitted(true);
+    } catch (error: any) {
+      if (
+        error?.data?.code === "BAD_REQUEST" &&
+        error?.message === "Email is already in use"
+      ) {
+        form.setError("email", {
+          message:
+            "This email is already registered with us, please try again with a different email!",
+        });
+      } else {
+        console.error("Unexpected error", error);
+      }
+    }
   }
 
   return (
@@ -63,19 +86,26 @@ const RegistrationForm = () => {
               <a
                 href="/resend-verification"
                 className="text-green-700 underline md:text-lg text-base"
+                onClick={async () => {
+                  await sendEmailAgain({ email: userEmail });
+                  console.log("send Email")
+                }}
               >
                 resend the verification link
               </a>
               .
             </p>
-            <a href="/auth/login" className="font-semibold hover:underline text-gray-500">
+            <a
+              href="/auth/login"
+              className="font-semibold hover:underline text-gray-500"
+            >
               Back to Login
             </a>
           </div>
         )}
 
         <div className="">
-          <div className="md:grid md:grid-cols-2 md:gap-3">
+          <div className="md:grid md:grid-cols-2 md:gap-x-3">
             <FormField
               control={form.control}
               name="firstName"
@@ -148,7 +178,7 @@ const RegistrationForm = () => {
         </div>
 
         <Button type="submit" className="w-full" disabled={isLoading}>
-          {loading ? "Signing Up..." : "Sign Up"}
+          {isLoading ? "Signing Up..." : "Sign Up"}
         </Button>
         <div>
           <p className="text-l text-center">

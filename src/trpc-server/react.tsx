@@ -3,18 +3,16 @@
 // import type { AppRouter } from "@wall/api";
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  TRPCClientError,
-  unstable_httpBatchStreamLink,
-} from "@trpc/client";
+import { TRPCClientError, unstable_httpBatchStreamLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 import type { AppRouter } from "@/app/trpc";
-// import { toast } from "sonner";
+import { toast } from "sonner";
 
 export const api = createTRPCReact<AppRouter>();
 
 export function TRPCReactProvider(props: {
   children: React.ReactNode;
+  headersPromise: Promise<Headers>;
 }) {
   const [queryClient] = useState(
     () =>
@@ -30,11 +28,12 @@ export function TRPCReactProvider(props: {
           mutations: {
             retry: (_, error) => {
               handleErrorOnClient(error);
+              console.log(error)
               return false;
             },
           },
         },
-      }),
+      })
   );
 
   const [trpcClient] = useState(() =>
@@ -47,19 +46,17 @@ export function TRPCReactProvider(props: {
         // }),
         unstable_httpBatchStreamLink({
           url: getBaseUrl() + "/api/trpc",
-          // async headers() {
-          //   // const headers = new Headers(await props.headersPromise);
-          //   headers.set("x-trpc-source", "nextjs-react");
-          //   // headers.set("portal", "customer");
-          //   return headers;
-          // },
+          async headers() {
+            const headers = new Headers(await props.headersPromise);
+            headers.set("x-trpc-source", "nextjs-react");
+            headers.set("portal", "User");
+            return headers;
+          },
         }),
       ],
-    }),
+    })
   );
-
-  // console.log(getBaseUrl() + "/api/trpc");
-
+// console.log(first)
   return (
     <QueryClientProvider client={queryClient}>
       <api.Provider client={trpcClient} queryClient={queryClient}>
@@ -83,6 +80,6 @@ function handleErrorOnClient(error: unknown): boolean {
     return true;
   }
 
-  //   toast.error(error.message.slice(0, 50) + "...");
+  toast.error(error.message.slice(0, 50) + "...");
   return true;
 }

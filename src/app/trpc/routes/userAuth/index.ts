@@ -1,8 +1,5 @@
 import { string, z } from "zod";
-import {
-  createTRPCRouter,
-  publicProcedure,
-} from "../../trpc";
+import { createTRPCRouter, publicProcedure } from "../../trpc";
 import { generateJwtToken } from "@/lib/services/jwt";
 import { sendEmail } from "@/lib/services/sendEmail";
 import { TRPCError } from "@trpc/server";
@@ -63,6 +60,38 @@ export const userAuth = createTRPCRouter({
       return {
         isEmailSent,
       };
+    }),
+  sendAgainEmail: publicProcedure
+    .input(
+      z.object({
+        email: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.users.findFirst({
+        where: { email: input.email },
+        select: {
+          firstName: true,
+          lastName: true,
+          emailToken: true,
+        },
+      });
+      if (!user) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Email not found",
+        });
+      }
+      await sendEmail({
+        email: input.email,
+        subject:
+          "Verify Your Email to Complete Your Registration at Waste Management System",
+        template: verificationEmailTemp(
+          user.firstName,
+          user.lastName,
+          user.emailToken!
+        ),
+      });
     }),
   verifyEmail: publicProcedure
     .input(
