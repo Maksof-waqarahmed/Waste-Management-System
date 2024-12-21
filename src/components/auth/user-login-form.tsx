@@ -70,7 +70,12 @@ const LoginForm = () => {
             </FormItem>
           )}
         />
-
+        <a
+          href="/auth/forgot-password"
+          className="text-base font-medium text-green-700 underline hover:no-underline block text-end"
+        >
+          Forget password?{" "}
+        </a>
         <Button type="submit" className="w-full">
           Login
         </Button>

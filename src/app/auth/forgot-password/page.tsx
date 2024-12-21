@@ -12,7 +12,7 @@ import logo from "../../../assets/Images/logo.png";
 
 const Page = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-green-300 to-green-100">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-green-300 to-green-100 p-5">
       <Card className="rounded-2xl max-w-[400px] w-full font-heading">
         <CardHeader>
           <Image
@@ -22,7 +22,9 @@ const Page = () => {
             alt=""
             className="mt-[-20px] ml-[-27px]"
           />
-          <CardTitle className="text-2xl text-[#027C05] font-bold	">Forgot Your Password?</CardTitle>
+          <CardTitle className="text-2xl text-[#027C05] font-bold	">
+            Forgot Your Password?
+          </CardTitle>
           <CardDescription className="text-black">
             We’ll send you instructions to reset your password via email.
           </CardDescription>

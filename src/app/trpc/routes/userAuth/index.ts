@@ -123,7 +123,7 @@ export const userAuth = createTRPCRouter({
         template: welcomeEmailTemp(cUser.firstName, cUser.lastName),
       });
     }),
-  forgetPassword: publicProcedure
+  forgotPassword: publicProcedure
     .input(
       z.object({
         email: string(),
@@ -147,7 +147,7 @@ export const userAuth = createTRPCRouter({
           emailToken: token,
         },
       });
-      const isSent = await sendEmail({
+      await sendEmail({
         email: resetPassUser.email,
         subject: "Reset Your Waste Management System Account Password",
         template: resetPasswordEmail(

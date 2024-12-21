@@ -206,98 +206,95 @@ export const verificationEmailTemp = (
 export const resetPasswordEmail = (
   firstName: string,
   lastName: string,
-  verificationToken: string
+  emailResetToken: string
 ) => {
   const resetPasswordEmail = `
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reset Your Password</title>
-<style>
-    body {
-        margin: 0;
-        padding: 2rem;
-        font-family: 'Arial', sans-serif;
-        background-color: #f1f8f5; /* Light green background */
-        font-size: 16px;
-        color: #333333;
-    }
-    .email-container {
-        background-color: #ffffff;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        max-width: 600px;
-        margin: 2rem auto;
-        padding: 2rem;
-        text-align: center;
-        border: 2px solid #4caf50; /* Green border */
-    }
-    .email-logo {
-        width: 120px;
-        margin-bottom: 1.5rem;
-    }
-    .email-title {
-        font-size: 24px;
-        font-weight: bold;
-        color: #2e7d32; /* Dark green */
-        margin-bottom: 1rem;
-    }
-    .email-content {
-        font-size: 16px;
-        line-height: 1.6;
-        text-align: justify;
-    }
-    .cta-button {
-        display: inline-block;
-        background-color: #4caf50; /* Green button */
-        text-decoration: none;
-         color: white
-        padding: 0.75rem 1.5rem;
-        font-size: 16px;
-        font-weight: bold;
-        border-radius: 4px;
-        margin: 1.5rem 0;
-    }
-    a{
-    color: white
-    }
-    .cta-button:hover {
-        background-color: #388e3c;
-    }
-    .footer {
-        margin-top: 2rem;
-        font-size: 14px;
-        color: #666666;
-        text-align: center;
-    }
-</style>
-</head>
-<body>
-<div class="email-container">
-    <img src="https://media.istockphoto.com/id/1384532150/vector/recycle-symbol-inside-circle-with-leaves-zero-waste-concept.jpg?s=612x612&w=0&k=20&c=lQPT8cj_dpkQBxa1G4Y6RzDz5vLog6OmWERx-vGpF_Y=" alt="WMS Logo" class="email-logo">
-    <h1 class="email-title">Reset Your Password</h1>
-    <p class="email-content">
-        Dear <strong>${firstName + " " + lastName}</strong>,<br><br>
-        We received a request to reset your password for your Waste Management System account. If this was you, please click the button below to reset your password:
-    </p>
-    <a href="${
-      process.env.NEXT_PUBLIC_CUSTOMER_URL
-    }/auth/email-verification/${verificationToken}" class="cta-button">Reset Password</a>
-    <p class="email-content">
-        If you didn’t request a password reset, you can safely ignore this email. Your password will remain unchanged.
-    </p>
-    <p class="email-content">
-        For further assistance, feel free to contact us at <a href="mailto:support@wastemanagementsystem.com">support@wastemanagementsystem.com</a>.
-    </p>
-    <hr>
-    <div class="footer">
-        &copy; 2024 Waste Management System. All rights reserved.
-    </div>
-</div>
-</body>
-</html>`;
+      <!DOCTYPE html>
+  <html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reset Your Password</title>
+  <style>
+      body {
+          margin: 0;
+          padding: 2rem;
+          font-family: 'Arial', sans-serif;
+          background-color: #f1f8f5; /* Light green background */
+          font-size: 16px;
+          color: #333333;
+      }
+      .email-container {
+          background-color: #ffffff;
+          border-radius: 8px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          max-width: 600px;
+          margin: 2rem auto;
+          padding: 2rem;
+          text-align: center;
+          border: 2px solid #4caf50; /* Green border */
+      }
+      .email-logo {
+          width: 120px;
+          margin-bottom: 1.5rem;
+      }
+      .email-title {
+          font-size: 24px;
+          font-weight: bold;
+          color: #2e7d32; /* Dark green */
+          margin-bottom: 1rem;
+      }
+      .email-content {
+          font-size: 16px;
+          line-height: 1.6;
+          text-align: justify;
+      }
+      .cta-button {
+          display: inline-block;
+          background-color: #4caf50; /* Green button */
+          color: #ffffff;
+          text-decoration: none;
+          padding: 0.75rem 1.5rem;
+          font-size: 16px;
+          font-weight: bold;
+          border-radius: 4px;
+          margin: 1.5rem 0;
+      }
+      .cta-button:hover {
+          background-color: #388e3c;
+      }
+      .footer {
+          margin-top: 2rem;
+          font-size: 14px;
+          color: #666666;
+          text-align: center;
+      }
+  </style>
+  </head>
+  <body>
+  <div class="email-container">
+      <img src="https://media.istockphoto.com/id/1384532150/vector/recycle-symbol-inside-circle-with-leaves-zero-waste-concept.jpg?s=612x612&w=0&k=20&c=lQPT8cj_dpkQBxa1G4Y6RzDz5vLog6OmWERx-vGpF_Y=" alt="WMS Logo" class="email-logo">
+      <h1 class="email-title">Reset Your Password</h1>
+      <p class="email-content">
+          Dear <strong>${firstName + " " + lastName}</strong>,<br><br>
+          We received a request to reset your password for your Waste Management System account. If this was you, please click the button below to reset your password:
+      </p>
+      <a href="${
+        process.env.NEXT_PUBLIC_CUSTOMER_URL
+      }/auth/reset-password/${emailResetToken}" class="cta-button">Reset Password</a>
+      <p class="email-content">
+          If you didn’t request a password reset, you can safely ignore this email. Your password will remain unchanged.
+      </p>
+      <p class="email-content">
+          For further assistance, feel free to contact us at <a href="mailto:support@wastemanagementsystem.com">support@wastemanagementsystem.com</a>.
+      </p>
+      <hr>
+      <div class="footer">
+          &copy; 2024 Waste Management System. All rights reserved.
+      </div>
+  </div>
+  </body>
+  </html>`;
   return resetPasswordEmail;
 };
 
