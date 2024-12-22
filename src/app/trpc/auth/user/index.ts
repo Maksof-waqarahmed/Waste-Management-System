@@ -5,10 +5,7 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
-      role?: ["USER", "ADMIN"];
-      isTwoFactorEnabled: boolean;
-      isOAuth: boolean;
-      verified?: boolean;
+      role: "USER";
       phone?: string;
     } & DefaultSession["user"];
   }

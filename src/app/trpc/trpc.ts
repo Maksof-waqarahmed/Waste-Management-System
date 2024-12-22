@@ -2,16 +2,20 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import prisma from "../../../prisma/db";
 import { Session } from "../trpc/auth/user/index";
 import { ZodError } from "zod";
+import { NextApiResponse } from "next";
 
 export const createTRPCContext = async (opts: {
   headers: Headers;
+  res: NextApiResponse;
   // session: Session | null;
 }) => {
   // const session = opts.session;
+  const res = opts.res;
 
   return {
     // session,
     prisma,
+    res
   };
 };
 

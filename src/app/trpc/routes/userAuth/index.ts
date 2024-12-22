@@ -1,4 +1,4 @@
-import { string, z } from "zod";
+import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../../trpc";
 import { generateJwtToken } from "@/lib/services/jwt";
 import { sendEmail } from "@/lib/services/sendEmail";
@@ -10,6 +10,7 @@ import {
   welcomeEmailTemp,
 } from "../../../../lib/services/emailTemp";
 import { hashPassword, verifyPassword } from "@/lib/services/bcrypt";
+import { serialize } from "@/lib/utils";
 
 export const userAuth = createTRPCRouter({
   create: publicProcedure
@@ -126,7 +127,7 @@ export const userAuth = createTRPCRouter({
   forgotPassword: publicProcedure
     .input(
       z.object({
-        email: string(),
+        email: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -163,7 +164,7 @@ export const userAuth = createTRPCRouter({
   CheckToken: publicProcedure
     .input(
       z.object({
-        token: string(),
+        token: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -213,8 +214,8 @@ export const userAuth = createTRPCRouter({
   login: publicProcedure
     .input(
       z.object({
-        email: string(),
-        password: string(),
+        email: z.string(),
+        password: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -234,12 +235,41 @@ export const userAuth = createTRPCRouter({
         input.password,
         loginUser.password
       );
-      if (!isTruePassword) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Invalid password. Please try again or reset your password.",
-        });
-      }
+      // if (!isTruePassword) {
+      //   throw new TRPCError({
+      //     code: "BAD_REQUEST",
+      //     message: "Invalid password. Please try again or reset your password.",
+      //   });
+      // }
+
+      const payload = {
+        id: loginUser.id,
+        email: loginUser.email,
+        number: loginUser.phone,
+        name: `${loginUser.firstName} ${loginUser.lastName}`,
+        proImage: loginUser.profileImg,
+        role: "USER",
+        isVerified: loginUser.isVerified,
+      };
+      const token = await generateJwtToken(payload);
+
+      await ctx.prisma.sessions.create({
+        data: {
+          sessionToken: token,
+          userId: loginUser.id,
+        },
+      });
+
+      const cookie = serialize("authToken", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 60 * 15,
+        path: "/",
+      });
+      console.log(cookie)
+      ctx.res.setHeader("Set-Cookie", cookie);
+
       const { password, ...userWithoutPassword } = loginUser;
       return { message: "Login Successfully!", user: userWithoutPassword };
     }),

@@ -16,28 +16,30 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import PasswordInput from "../password-input";
 import Link from "next/link";
+import { userLoginSchema } from "@/schemas";
+import { api } from "@/trpc-server/react";
 
-const formSchema = z.object({
-  email: z.string({ message: "Email is required" }).email({
-    message: "Invalid email format, Please enter a valid email address.",
-  }),
-  password: z
-    .string({ message: "Password is required" })
-    .min(8, { message: "Password must be at least 8 characters long" }),
-});
-
-type UserFormValue = z.infer<typeof formSchema>;
+type UserFormValue = z.infer<typeof userLoginSchema>;
 
 const LoginForm = () => {
-  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const { mutateAsync: login, isLoading } = api.userAuth.login.useMutation();
 
   const form = useForm<UserFormValue>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(userLoginSchema),
     mode: "onChange",
   });
 
-  function onSubmit(data: UserFormValue) {}
+  async function onSubmit(data: UserFormValue) {
+    try {
+      const res = await login({
+        email: data.email,
+        password: data.password,
+      });
+      console.log(res);
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  }
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-5">

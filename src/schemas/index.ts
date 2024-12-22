@@ -55,3 +55,12 @@ export const forgotPasswordSchema = z.object({
     message: "Invalid email format, Please enter a valid email address.",
   }),
 });
+
+export const userLoginSchema = z.object({
+  email: z.string({ message: "Email is required" }).email({
+    message: "Invalid email format, Please enter a valid email address.",
+  }),
+  password: z
+    .string({ message: "Password is required" })
+    .min(8, { message: "Password must be at least 8 characters long" }),
+});
