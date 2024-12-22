@@ -203,12 +203,12 @@ export const verificationEmailTemp = (
   return verificationEmailTemp;
 };
 
-export const resetPasswordEmail = (
+export const forgotPasswordEmail = (
   firstName: string,
   lastName: string,
   emailResetToken: string
 ) => {
-  const resetPasswordEmail = `
+  const forgotPasswordEmail = `
       <!DOCTYPE html>
   <html lang="en">
   <head>
@@ -295,7 +295,7 @@ export const resetPasswordEmail = (
   </div>
   </body>
   </html>`;
-  return resetPasswordEmail;
+  return forgotPasswordEmail;
 };
 
 export const passwordResetTempEmail = (firstName: string, lastName: string) => {
@@ -349,7 +349,7 @@ export const passwordResetTempEmail = (firstName: string, lastName: string) => {
 </head>
 <body>
     <div class="email-container">
-        <img src="http://localhost:3001/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo.fb2b7171.png&w=128&q=75" alt="WMS Logo" class="email-logo">
+        <img src="https://media.istockphoto.com/id/1384532150/vector/recycle-symbol-inside-circle-with-leaves-zero-waste-concept.jpg?s=612x612&w=0&k=20&c=lQPT8cj_dpkQBxa1G4Y6RzDz5vLog6OmWERx-vGpF_Y=" alt="WMS Logo" class="email-logo">
         <h1 class="email-title">Password Reset Successful</h1>
         <p class="email-content">
             Dear <strong>${firstName + " " + lastName}</strong>,<br><br>

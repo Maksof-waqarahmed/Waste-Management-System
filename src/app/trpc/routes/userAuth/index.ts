@@ -5,7 +5,7 @@ import { sendEmail } from "@/lib/services/sendEmail";
 import { TRPCError } from "@trpc/server";
 import {
   passwordResetTempEmail,
-  resetPasswordEmail,
+  forgotPasswordEmail,
   verificationEmailTemp,
   welcomeEmailTemp,
 } from "../../../../lib/services/emailTemp";
@@ -150,7 +150,7 @@ export const userAuth = createTRPCRouter({
       await sendEmail({
         email: resetPassUser.email,
         subject: "Reset Your Waste Management System Account Password",
-        template: resetPasswordEmail(
+        template: forgotPasswordEmail(
           resetPassUser.firstName,
           resetPassUser.lastName,
           token

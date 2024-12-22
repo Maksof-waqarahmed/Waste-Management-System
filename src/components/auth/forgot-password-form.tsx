@@ -16,17 +16,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
-import { useParams } from "next/navigation";
 import { api } from "@/trpc-server/react";
-import { toast } from "sonner";
+import { forgotPasswordSchema } from "@/schemas";
 
-const formSchema = z.object({
-  email: z.string({ message: "Email is required" }).email({
-    message: "Invalid email format, Please enter a valid email address.",
-  }),
-});
-
-type UserFormValue = z.infer<typeof formSchema>;
+type UserFormValue = z.infer<typeof forgotPasswordSchema>;
 
 const ForgotPassword = () => {
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
@@ -34,17 +27,18 @@ const ForgotPassword = () => {
   const { mutateAsync: forgotPassword, isLoading } =
     api.userAuth.forgotPassword.useMutation();
   const form = useForm<UserFormValue>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(forgotPasswordSchema),
     mode: "onChange",
   });
 
   async function onSubmit(data: UserFormValue) {
     try {
-      const res = await forgotPassword({
+      await forgotPassword({
         email: data.email,
       });
+      form.reset({ email: "" });
       setLoading(true);
-      setIsSubmitted(true)
+      setIsSubmitted(true);
     } catch (error: any) {
       if (
         error.message === "Email not found" &&

@@ -27,3 +27,31 @@ export const registerSchema = z.object({
     .string({ message: "Phone No is required" })
     .regex(/^\d+$/, { message: "Phone no must contain only numbers" }),
 });
+
+export const resetPasswordSchema = z
+  .object({
+    password: z
+      .string({ message: "Password is required" })
+      .min(8, { message: "Password must be at least 8 characters long" })
+      .regex(/[a-z]/, {
+        message: "Password must contain at least one lowercase letter",
+      })
+      .regex(/[A-Z]/, {
+        message: "Password must contain at least one uppercase letter",
+      })
+      .regex(/[0-9]/, { message: "Password must contain at least one number" })
+      .regex(/[\W_]/, {
+        message: "Password must contain at least one special character",
+      }),
+    confirmPassword: z.string({ message: "Confirm Password is required" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "The passwords you entered do not match. Please try again.",
+  });
+
+export const forgotPasswordSchema = z.object({
+  email: z.string({ message: "Email is required" }).email({
+    message: "Invalid email format, Please enter a valid email address.",
+  }),
+});
