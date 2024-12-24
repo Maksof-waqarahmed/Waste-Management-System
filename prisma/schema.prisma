@@ -28,19 +28,18 @@ model Users {
   collectedWaste CollectedWastes[]
   notification   Notifications[]
   transaction    Transactions[]
-  roles          ROLE?
   sessions       Sessions[]
 
   @@map("users")
 }
 
 model Sessions {
-  id           String   @id @default(uuid())
+  id           String    @id @default(uuid())
   sessionToken String
-  createdAt    DateTime @default(now())
+  createdAt    DateTime  @default(now())
   updatedAt    DateTime?
-  user         Users    @relation(fields: [userId], references: [id])
-  userId       String   @unique
+  user         Users     @relation(fields: [userId], references: [id])
+  userId       String
 
   @@map("sessions")
 }
@@ -48,7 +47,7 @@ model Sessions {
 model Reports {
   id                 String   @id @default(uuid())
   user               Users    @relation(fields: [userId], references: [id])
-  userId             String   @unique
+  userId             String
   location           String
   wasteType          String
   amount             Int
@@ -64,7 +63,7 @@ model Reports {
 model Rewards {
   id             String   @id @default(uuid())
   user           Users    @relation(references: [id], fields: [userId])
-  userId         String   @unique
+  userId         String
   points         Int      @default(0)
   createdAt      DateTime @default(now())
   updateAt       DateTime @default(now())
@@ -79,7 +78,7 @@ model Rewards {
 model CollectedWastes {
   id             String   @id @default(uuid())
   user           Users    @relation(references: [id], fields: [collectorId])
-  collectorId    String   @unique
+  collectorId    String
   collectionDate DateTime @default(now())
   status         STATUS
 
@@ -89,7 +88,7 @@ model CollectedWastes {
 model Notifications {
   id        String   @id @default(uuid())
   user      Users    @relation(fields: [userId], references: [id])
-  userId    String   @unique
+  userId    String
   message   String
   type      String
   isRead    Boolean  @default(false)
@@ -101,7 +100,7 @@ model Notifications {
 model Transactions {
   id          String   @id @default(uuid())
   user        Users    @relation(fields: [userId], references: [id])
-  userId      String   @unique
+  userId      String
   type        String
   amount      Int
   description String
@@ -113,9 +112,4 @@ model Transactions {
 enum STATUS {
   PENDING
   COMPLETED
-}
-
-enum ROLE {
-  USER
-  ADMIN
 }

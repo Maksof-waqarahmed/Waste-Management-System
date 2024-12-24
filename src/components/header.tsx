@@ -27,7 +27,6 @@ import logo from "../assets/Images/logo.png";
 import Link from "next/link";
 import { UseMediaQuery } from "./hooks/useMediaQuery";
 import { Avatar, AvatarImage } from "./ui/avatar";
-import { Span } from "next/dist/trace";
 
 interface HeaderProp {
   onMenuClick: () => void;
@@ -38,6 +37,12 @@ const Header = () => {
   const balance = 23.323;
   function handleNotificationClick(item: any) {}
   const isMobile = UseMediaQuery("(max-width: 768px)");
+
+  const handleLogout = async () => {
+    await fetch("/api/logout", {
+      method: "POST",
+    });
+  };
   return (
     <header className="w-full bg-white flex border-b border-gray-200 sticky top-0 z-50">
       <div className="flex items-center justify-between px-4 py-2 w-full">
@@ -48,10 +53,12 @@ const Header = () => {
           <Link href="/dashboard" className="flex items-center ml-3">
             <Image src={logo} alt="" width={60} />
             {!isMobile ? (
-            <span className="font-bold text-[23px] text-[#15803D]">
-              Waste Management System
-            </span>
-            ) : <span className="text-2xl font-semibold	 text-[#15803D]" >WMS</span> }
+              <span className="font-bold text-[23px] text-[#15803D]">
+                Waste Management System
+              </span>
+            ) : (
+              <span className="text-2xl font-semibold	 text-[#15803D]">WMS</span>
+            )}
           </Link>
         </div>
         {!isMobile && (
@@ -122,9 +129,7 @@ const Header = () => {
               <DropdownMenuTrigger asChild>
                 <div className="flex items-center cursor-pointer">
                   <Avatar>
-                    <AvatarImage
-                      src="https://github.com/shadcn.png"
-                    />
+                    <AvatarImage src="https://github.com/shadcn.png" />
                   </Avatar>
                 </div>
               </DropdownMenuTrigger>
@@ -133,14 +138,22 @@ const Header = () => {
                   Waqar
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem  className="font-medium">
+                <DropdownMenuItem className="font-medium">
                   <Link href={"/user-profile"}>Profile</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem  className="font-medium">
+                <DropdownMenuItem className="font-medium">
                   <Link href={"/auth/setting"}>Setting</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="font-medium">
-                <Link href={"/auth/login"}>Sign out</Link>
+                  <Link
+                    href="/auth/login"
+                    onClick={() => {
+                      handleLogout();
+                    }}
+                    className="w-full text-left"
+                  >
+                    Sign out
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

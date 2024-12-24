@@ -235,12 +235,12 @@ export const userAuth = createTRPCRouter({
         input.password,
         loginUser.password
       );
-      // if (!isTruePassword) {
-      //   throw new TRPCError({
-      //     code: "BAD_REQUEST",
-      //     message: "Invalid password. Please try again or reset your password.",
-      //   });
-      // }
+      if (!isTruePassword) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid password. Please try again or reset your password.",
+        });
+      }
 
       const payload = {
         id: loginUser.id,
@@ -252,8 +252,7 @@ export const userAuth = createTRPCRouter({
         isVerified: loginUser.isVerified,
       };
       const token = await generateJwtToken(payload);
-
-      await ctx.prisma.sessions.create({
+      const ses = await ctx.prisma.sessions.create({
         data: {
           sessionToken: token,
           userId: loginUser.id,
@@ -267,10 +266,7 @@ export const userAuth = createTRPCRouter({
         maxAge: 60 * 15,
         path: "/",
       });
-      console.log(cookie)
-      ctx.res.setHeader("Set-Cookie", cookie);
 
-      const { password, ...userWithoutPassword } = loginUser;
-      return { message: "Login Successfully!", user: userWithoutPassword };
+      return { message: "Login Successfully!" };
     }),
 });
