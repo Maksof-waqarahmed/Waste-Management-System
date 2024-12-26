@@ -33,15 +33,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "User Not Found" }, { status: 404 });
     }
 
-    // const isTruePassword = await verifyPassword(body.password, user.password);
-    // if (!isTruePassword) {
-    //   return NextResponse.json(
-    //     {
-    //       message: "Invalid password. Please try again or reset your password.",
-    //     },
-    //     { status: 404 }
-    //   );
-    // }
+    const isTruePassword = await verifyPassword(body.password, user.password);
+    if (!isTruePassword) {
+      return NextResponse.json(
+        {
+          message: "Invalid password. Please try again or reset your password.",
+        },
+        { status: 404 }
+      );
+    }
     const payload = {
       id: user.id,
       email: user.email,

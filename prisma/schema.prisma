@@ -38,7 +38,7 @@ model Sessions {
   sessionToken String
   createdAt    DateTime  @default(now())
   updatedAt    DateTime?
-  user         Users     @relation(fields: [userId], references: [id])
+  user         Users     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String
 
   @@map("sessions")
@@ -46,7 +46,7 @@ model Sessions {
 
 model Reports {
   id                 String   @id @default(uuid())
-  user               Users    @relation(fields: [userId], references: [id])
+  user               Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId             String
   location           String
   wasteType          String
@@ -62,7 +62,7 @@ model Reports {
 
 model Rewards {
   id             String   @id @default(uuid())
-  user           Users    @relation(references: [id], fields: [userId])
+  user           Users    @relation(references: [id], fields: [userId], onDelete: Cascade)
   userId         String
   points         Int      @default(0)
   createdAt      DateTime @default(now())
@@ -77,7 +77,7 @@ model Rewards {
 
 model CollectedWastes {
   id             String   @id @default(uuid())
-  user           Users    @relation(references: [id], fields: [collectorId])
+  user           Users    @relation(references: [id], fields: [collectorId], onDelete: Cascade)
   collectorId    String
   collectionDate DateTime @default(now())
   status         STATUS
@@ -87,7 +87,7 @@ model CollectedWastes {
 
 model Notifications {
   id        String   @id @default(uuid())
-  user      Users    @relation(fields: [userId], references: [id])
+  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   message   String
   type      String
@@ -99,7 +99,7 @@ model Notifications {
 
 model Transactions {
   id          String   @id @default(uuid())
-  user        Users    @relation(fields: [userId], references: [id])
+  user        Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   type        String
   amount      Int

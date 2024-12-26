@@ -44,6 +44,10 @@ const LoginForm = () => {
         throw new Error("Failed to submit data");
       }
       setLoading(false);
+      form.reset({
+        email: "",
+        password: ""
+      })
       route.push("/dashboard");
     } catch (error) {
       console.error(error);
