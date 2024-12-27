@@ -1,4 +1,4 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export default function middleware(req: NextRequest) {
   const token = req.cookies.get("authToken")?.value || "";
@@ -12,12 +12,20 @@ export default function middleware(req: NextRequest) {
     "/auth/reset-password",
   ];
 
-  if (publicPaths.includes(path) && token) {
+  const isPublicPath = publicPaths.some((publicPath) =>
+    path.startsWith(publicPath)
+  );
+
+  if (isPublicPath && token) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
-  if (!publicPaths.includes(path) && !token) {
+  if (!isPublicPath && !token) {
     return NextResponse.redirect(new URL("/auth/login", req.url));
+  }
+
+  if (isPublicPath && !token) {
+    return NextResponse.next();
   }
 
   return NextResponse.next();

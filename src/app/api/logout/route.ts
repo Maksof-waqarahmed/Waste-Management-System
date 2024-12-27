@@ -19,7 +19,7 @@ export async function POST(req: Request) {
       where: { sessionToken: token },
     });
 
-    const response = NextResponse.json({ message: "Logged out successfully" });
+    const response = NextResponse.redirect("/login", 307);
     response.headers.set(
       "Set-Cookie",
       serialize("authToken", "", {
@@ -33,6 +33,7 @@ export async function POST(req: Request) {
 
     return response;
   } catch (error) {
+    console.error("Error during logout:", error);
     return NextResponse.json(
       { message: "Internal Server Error" },
       { status: 500 }
