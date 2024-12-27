@@ -1,29 +1,26 @@
-import { BarCharts } from "@/components/charts/bar-chart";
-import { PieCharts } from "@/components/charts/pie-chart";
-import { ReportColumn } from "@/components/reportTable/column";
-import { DataTable } from "@/components/shared/data-table";
-import DashboardPage from "@/components/userPortal/dashboard";
 import React from "react";
+import { Metadata } from "next";
+import DashboardCards from "@/components/userPortal/dashboard/dashboard-cards";
+import DashboardCharts from "@/components/userPortal/dashboard/dashboard-charts";
+import DashboardTable from "@/components/userPortal/dashboard/dashboard-table";
 
-const Dashboard = () => {
-  return (
-    <div>
-      <h1 className="md:text-3xl text-2xl font-bold text-[#5a5959] md:text-left text-center">
-        <span className="text-green-600 ">Hello,</span>Waqar Rana
-      </h1>
-      <p className="text-base font-medium md:text-left text-center">
-        Welcome to your Waste Management Dashboard
-      </p>
-      <DashboardPage />
-      <div className="grid grid-cols-2  mt-5 gap-5">
-        <PieCharts />
-        <BarCharts/>
-      </div>
-      <div className="mt-5 overflow-x-auto">
-        <DataTable columns={ReportColumn} data={[]} />
-      </div>
-    </div>
-  );
+export const metadata: Metadata = {
+  title: "Dashboard | Waste Management System",
+  description: "Overview of your waste management activities and rewards",
 };
 
-export default Dashboard;
+export default function Dashboard() {
+  return (
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold tracking-tight text-green-600">Dashboard</h1>
+        <p className="text-muted-foreground">
+          Welcome to your Waste Management Dashboard, <span className="text-green-600 font-bold text-lg">Waqar Rana</span> 
+        </p>
+      </div>
+      <DashboardCards />
+      <DashboardCharts />
+      <DashboardTable />
+    </div>
+  );
+}

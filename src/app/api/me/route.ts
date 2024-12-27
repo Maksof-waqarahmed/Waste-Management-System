@@ -18,6 +18,11 @@ export async function GET(req: Request) {
 
     const userData = await prisma.users.findFirst({
       where: { id: user.id },
+      include: {
+        reward: true,
+        collectedWaste: true,
+        leaderboard: true,
+      },
     });
 
     if (!userData) {

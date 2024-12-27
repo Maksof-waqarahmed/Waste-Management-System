@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -23,12 +20,13 @@ model Users {
   isVerified     Boolean           @default(false)
   createdAt      DateTime          @default(now())
   updatedAt      DateTime?
-  report         Reports[]
-  reward         Rewards[]
-  collectedWaste CollectedWastes[]
-  notification   Notifications[]
-  transaction    Transactions[]
-  sessions       Sessions[]
+  report         Reports[]         
+  reward         Rewards[]         
+  collectedWaste CollectedWastes[] 
+  notification   Notifications[]   
+  transaction    Transactions[]    
+  sessions       Sessions[]        
+  leaderboard    Leaderboard[]   
 
   @@map("users")
 }
@@ -107,6 +105,17 @@ model Transactions {
   date        DateTime @default(now())
 
   @@map("transaction")
+}
+
+model Leaderboard {
+  id        String   @id @default(uuid())
+  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  score     Int
+  rank      Int
+  createdAt DateTime @default(now())
+
+  @@map("leaderboard")
 }
 
 enum STATUS {

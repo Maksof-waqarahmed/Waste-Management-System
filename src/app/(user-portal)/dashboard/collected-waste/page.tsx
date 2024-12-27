@@ -1,17 +1,19 @@
-import { Pagination } from "@/components/ui/pagination";
-import CollectedWaste from "@/components/userPortal/collectedPage";
-import React from "react";
+import CollectedWaste from "@/components/userPortal/collected-waste/collected-waste"
+import { Metadata } from "next"
 
-const Page = () => {
+export const metadata: Metadata = {
+  title: "Collected Waste | Waste Management System",
+  description: "View and manage collected waste tasks",
+}
+
+export default function CollectedWastePage() {
   return (
-    <div>
-      <h1 className="text-3xl font-semibold mb-6 text-green-700 text-center ">
+    <div className="container mx-auto py-10">
+      <h1 className="text-3xl font-bold tracking-tight mb-6 text-green-600">
         Waste Collection Tasks
       </h1>
       <CollectedWaste />
-      <Pagination />
     </div>
-  );
-};
+  )
+}
 
-export default Page;
