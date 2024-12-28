@@ -6,70 +6,58 @@ import logo from "../../../assets/Images/logo.png";
 
 const Page = () => {
   return (
-    <div className="flex flex-col md:flex-row lg:p-0 p-5 items-center justify-evenly">
-      <div className="w-full p-4 md:w-[60%] md:h-[800px] hidden lg:block">
+    <div className="min-h-screen  flex flex-col md:flex-row items-center justify-center p-5 md:p-10">
+      <div className="w-full md:w-1/2 lg:w-2/5 mb-8 md:mb-0 md:pr-8">
         <Image
           src={logo}
           width={150}
           height={44}
-          alt=""  
+          alt="Waste Management System Logo"
+          className="mb-6"
         />
-
-        <h1 className="md:text-3xl text-xl font-bold  md:pl-10 text-justify	">
-          Join Our Waste Management System – Make Your Environment Cleaner!
+        <h1 className="text-3xl md:text-4xl font-bold text-green-800 mb-4">
+          Join Our Waste Management System
         </h1>
-        <p className="mb-3 md:pl-10 font-semibold md:text-lg text-base text-justify	">
-          Become an active part of the solution by joining our innovative waste
-          management system. Not only will you be helping the planet, but you
-          can also earn rewards for your contributions! Here’s how easy it is to
-          make a positive impact:
+        <p className="text-lg text-green-700 mb-6">
+          Make Your Environment Cleaner and Earn Rewards!
         </p>
-        <h2 className="text-xl font-bold mb-3 md:pl-10 line-clamp-3 text-justify ">
-          How It Works:
-        </h2>
-        <ul className="list-disc list-inside space-y-2 md:pl-10 md:text-lg text-justify	">
-          <li>
-            <strong>Snap & Upload:</strong> Spot any waste around you? Just take
-            a picture, upload it, and let our system do the rest! Using
-            cutting-edge AI technology, we'll detect and classify the type of
-            waste.
-          </li>
-          <li>
-            <strong>Earn Points:</strong> For every valid waste submission,
-            you’ll earn points, which can be redeemed for amazing rewards like
-            gift cards, discounts, and eco-friendly products.
-          </li>
-          <li>
-            <strong>Admin Review & Collection:</strong> Our dedicated team will
-            review your submission and ensure prompt waste collection from the
-            exact location you provided.
-          </li>
-          <li>
-            <strong>Track Progress:</strong> You can track your submissions and
-            see the impact you’re making. Stay motivated by watching your points
-            grow!
-          </li>
-          <li>
-            <strong>Leaderboard Feature:</strong> OCheck out our leaderboard to
-            see how you rank compared to other contributors. The more waste you
-            report, the higher you climb! Compete with others to become the top
-            "Eco-Champion" and inspire others to follow in your footsteps.
-          </li>
-        </ul>
+        <div className="bg-white rounded-lg p-6 shadow-lg">
+          <h2 className="text-2xl font-bold text-green-700 mb-4">How It Works:</h2>
+          <ul className="space-y-4">
+            {[
+              { title: "Snap & Upload", desc: "Take a picture of waste and let our AI classify it." },
+              { title: "Earn Points", desc: "Get rewards for valid waste submissions." },
+              { title: "Admin Review", desc: "Our team ensures prompt waste collection." },
+              { title: "Track Progress", desc: "Monitor your impact and watch your points grow." },
+              { title: "Leaderboard", desc: "Compete to become the top 'Eco-Champion'." },
+            ].map((item, index) => (
+              <li key={index} className="flex items-start">
+                <span className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3 mt-1">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </span>
+                <div>
+                  <h3 className="font-semibold text-green-800">{item.title}</h3>
+                  <p className="text-green-600">{item.desc}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-
-      <div className="w-full md:w-auto">
-        <Card className="p-8 rounded-2xl max-w-[550px] w-full font-heading">
-          <div className="flex items-center">
+      <div className="w-full md:w-1/2 lg:w-3/5 md:pl-8">
+        <Card className="p-8 rounded-2xl max-w-[550px] w-full mx-auto bg-white shadow-2xl">
+          <div className="flex items-center justify-center mb-6">
             <Image
               src={logo}
-              width={120}
-              height={44}
-              alt=""
-              className="mt-[-20px] ml-[-27px] w-20 h-20 md:w-[120px] md:h-[120px]"
+              width={80}
+              height={80}
+              alt="Waste Management System Logo"
+              className="mr-4"
             />
-            <h3 className="md:text-3xl font-bold mb-5 text-[#027C05] text-xl">
-              Waste Management System
+            <h3 className="text-3xl font-bold text-green-700">
+              Registration
             </h3>
           </div>
           <RegistrationForm />

@@ -34,6 +34,7 @@ const RegistrationForm = () => {
     resolver: zodResolver(registerSchema),
     mode: "onChange",
   });
+
   async function onSubmit(data: UserFormValue) {
     try {
       const res = await createUser({
@@ -44,13 +45,7 @@ const RegistrationForm = () => {
         phoneNo: data.phoneNo,
       });
       setUserEmail(data.email);
-      form.reset({
-        email: "",
-        firstName: "",
-        lastName: "",
-        password: "",
-        phoneNo: "",
-      });
+      form.reset();
       setIsSubmitted(true);
     } catch (error: any) {
       if (
@@ -59,7 +54,7 @@ const RegistrationForm = () => {
       ) {
         form.setError("email", {
           message:
-            "This email is already registered with us, please try again with a different email!",
+            "This email is already registered. Please try a different email.",
         });
       } else {
         console.error("Unexpected error", error);
@@ -71,131 +66,129 @@ const RegistrationForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full md:space-y-5 space-y-1"
+        className="space-y-6"
       >
-        {isSubmitted && (
-          <div className="w-full p-2 text-center  rounded-lg shadow-md border-2 border-green-600">
-            <h1 className="md:text-[25px] text-xl font-bold text-green-700">
+        {isSubmitted ? (
+          <div className="bg-green-50 border-2 border-green-500 rounded-lg p-6 text-center">
+            <h1 className="text-2xl font-bold text-green-700 mb-2">
               Welcome to WMS!
             </h1>
-            <p className="md:mt-2 mt-0 md:text-lg text-base text-gray-700">
+            <p className="text-lg text-green-600 mb-4">
               Thank You for Registering!
             </p>
-            <p className="my-2 text-sm text-gray-500 md:text-lg">
-              Didn’t receive the email? Check your spam folder or <br />
-              <a
-                href="/resend-verification"
-                className="text-green-700 underline md:text-lg text-base"
+            <p className="text-gray-600 mb-4">
+              We've sent a verification email to your inbox. Please check your email and click the verification link to activate your account.
+            </p>
+            <p className="text-sm text-gray-500">
+              Didn't receive the email? Check your spam folder or{" "}
+              <button
                 onClick={async () => {
                   await sendEmailAgain({ email: userEmail });
-                  console.log("send Email")
                 }}
+                className="text-green-700 underline hover:no-underline"
               >
                 resend the verification link
-              </a>
+              </button>
               .
             </p>
-            <a
+            <Link
               href="/auth/login"
-              className="font-semibold hover:underline text-gray-500"
+              className="mt-4 inline-block font-semibold text-green-700 hover:underline"
             >
               Back to Login
-            </a>
+            </Link>
           </div>
-        )}
-
-        <div className="">
-          <div className="md:grid md:grid-cols-2 md:gap-x-3">
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>First Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="John" {...field} className="bg-gray-50" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Last Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Doe" {...field} className="bg-gray-50" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="john.doe@example.com" {...field} className="bg-gray-50" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="phoneNo"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <Input placeholder="+1 (555) 123-4567" {...field} className="bg-gray-50" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={form.control}
-              name="firstName"
+              name="password"
               render={({ field }) => (
-                <FormItem className="md:md:mb-5 mb-2">
-                  <FormLabel>First Name</FormLabel>
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="First Name" {...field} />
+                    <PasswordInput
+                      onChange={field.onChange}
+                      value={field.value}
+                    //   className="bg-gray-50"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem className="md:mb-5 mb-2">
-                  <FormLabel>Last Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Last Name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem className="md:mb-5 mb-2">
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phoneNo"
-              render={({ field }) => (
-                <FormItem className="md:mb-5 mb-2">
-                  <FormLabel>Phone No</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Phone No" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem className="mb-5">
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <PasswordInput
-                    onChange={(e) => field.onChange(e)}
-                    value={field.value}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? "Signing Up..." : "Sign Up"}
-        </Button>
-        <div>
-          <p className="text-l text-center">
-            Already have an account?
-            <span>
+            <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white" disabled={isLoading}>
+              {isLoading ? "Signing Up..." : "Sign Up"}
+            </Button>
+            <p className="text-center mt-4">
+              Already have an account?{" "}
               <Link
                 href="/auth/login"
-                className="text-sm text-green-700 font-semibold text-left underline hover:no-underline"
+                className="text-green-700 font-semibold hover:underline"
               >
                 Login
               </Link>
-            </span>
-          </p>
-        </div>
+            </p>
+          </>
+        )}
       </form>
     </Form>
   );
 };
 
 export default RegistrationForm;
+
