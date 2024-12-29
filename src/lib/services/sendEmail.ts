@@ -25,7 +25,6 @@ export async function sendEmail({ email, subject, template }: MailProps) {
     await transporter.sendMail(mailOption);
     return true;
   } catch (error) {
-    console.log("Error", error);
     return false;
   }
 }

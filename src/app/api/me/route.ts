@@ -14,7 +14,6 @@ export async function GET(req: Request) {
 
   try {
     const user: any = await verifyJWT(authToken);
-    console.log(user);
 
     const userData = await prisma.users.findFirst({
       where: { id: user.id },

@@ -56,9 +56,7 @@ export function ReportWaste() {
 
   const onSubmit = async (data: ReportForm) => {
     setLoading(true)
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 2000))
-    console.log("Submitted Data:", data)
     setLoading(false)
     form.reset()
   }

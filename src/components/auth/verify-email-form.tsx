@@ -17,7 +17,6 @@ const VerifyEmail = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [isVerified, setIsVerified] = useState<boolean>(false);
   const router = useRouter();
-  console.log("Error", isError);
   useEffect(() => {
     if (!token) {
       router.replace("/auth/login");

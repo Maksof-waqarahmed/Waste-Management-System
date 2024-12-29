@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { createTRPCRouter, publicProcedure, protectedProcedure} from "../../trpc";
 
 export const reportWaste = createTRPCRouter({
-  submitWaste: publicProcedure
+  submitWaste: protectedProcedure
     .input(
       z.object({
         location: z.string(),
@@ -28,7 +28,7 @@ export const reportWaste = createTRPCRouter({
       return { message: "Waste Submitted Successfully", code: 200 };
     }),
 
-  markAsCompleted: publicProcedure
+  markAsCompleted: protectedProcedure
     .input(
       z.object({
         reportId: z.string(),
@@ -59,7 +59,7 @@ export const reportWaste = createTRPCRouter({
       };
     }),
 
-  getRecentReports: publicProcedure.query(async ({ ctx }) => {
+  getRecentReports: protectedProcedure.query(async ({ ctx }) => {
     const recentReports = await ctx.prisma.reports.findMany({
       select: {
         location: true,

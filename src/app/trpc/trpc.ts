@@ -6,24 +6,23 @@ import { verifyJWT } from "@/lib/services/jwt";
 
 export const createTRPCContext = async (opts: {
   headers: Headers;
-  // req: Request;
+  req: Request;
 }) => {
-  // const cookieHeader = opts.req.headers.get("cookie") || "";
-  // const cookies = parse(cookieHeader);
-  // const token = cookies.authToken;
-  // let user = null;
+  const cookieHeader = opts.req.headers.get("cookie") || "";
+  const cookies = parse(cookieHeader);
+  const token = cookies.authToken;
+  let user = null;
 
-  // if (token) {
-  //   try {
-  //     user = verifyJWT(token);
-  //     console.log(user);
-  //   } catch (err) {
-  //     console.error("Invalid or expired token");
-  //   }
-  // }
+  if (token) {
+    try {
+      user = verifyJWT(token);
+    } catch (err) {
+      console.error("Invalid or expired token");
+    }
+  }
 
   return {
-    // user,
+    user,
     prisma,
   };
 };
@@ -42,14 +41,14 @@ export const createCallerFactory = t.createCallerFactory;
 export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
 
-// export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
-//   if (!ctx?.user) {
-//     throw new TRPCError({ code: "UNAUTHORIZED" });
-//   }
+export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
+  if (!ctx?.user) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
 
-//   return next({
-//     ctx: {
-//       session: { user: ctx.user },
-//     },
-//   });
-// });
+  return next({
+    ctx: {
+      session: { user: ctx.user },
+    },
+  });
+});
