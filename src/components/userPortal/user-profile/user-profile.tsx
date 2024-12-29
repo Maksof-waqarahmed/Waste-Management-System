@@ -12,7 +12,7 @@ export default function UserProfile() {
     name: "John Doe",
     email: "john.doe@example.com",
     bio: "I'm a software developer passionate about creating user-friendly applications.",
-    profileImage: "/placeholder.svg?height=128&width=128",
+    profileImage: "",
   })
 
   const handleUpdateUser = (updatedUser: Partial<typeof user>) => {

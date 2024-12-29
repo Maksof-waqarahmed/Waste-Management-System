@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import logo from "../../../assets/Images/logo.png";
+import logo from "../../../assets/images/logo.png";
 
 const Page = () => {
   return (

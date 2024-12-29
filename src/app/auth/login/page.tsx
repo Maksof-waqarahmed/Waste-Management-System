@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import React from "react";
-import logo from "../../../assets/Images/logo.png";
+import logo from "../../../assets/images/logo.png";
 import LoginForm from "@/components/auth/user-login-form";
 const Page = () => {
   return (

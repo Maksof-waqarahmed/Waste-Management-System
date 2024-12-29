@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
-import logo from "@/assets/images/logo.png"
+import logo from "../assets/images/logo.png"
 import { UseMediaQuery } from "./hooks/useMediaQuery"
 
 interface HeaderProps {

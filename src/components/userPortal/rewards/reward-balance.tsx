@@ -2,7 +2,7 @@ import React from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Coins } from 'lucide-react'
 import Image from "next/image"
-import logo from "@/assets/Images/logo.png"
+import logo from "../../../assets/images/logo.png"
 
 interface RewardBalanceProps {
   balance: number

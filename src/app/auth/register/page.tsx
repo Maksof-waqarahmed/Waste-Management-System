@@ -2,7 +2,7 @@ import RegistrationForm from "@/components/auth/user-registration-form";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import React from "react";
-import logo from "../../../assets/Images/logo.png";
+import logo from "../../../assets/images/logo.png";
 
 const Page = () => {
   return (

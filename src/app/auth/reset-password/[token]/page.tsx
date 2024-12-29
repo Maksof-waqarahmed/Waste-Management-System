@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import logo from "../../../../assets/Images/logo.png";
+import logo from "../../../../assets/images/logo.png";
 import ResetPasswordForm from "@/components/auth/reset-password-form";
 
 const Page = () => {
