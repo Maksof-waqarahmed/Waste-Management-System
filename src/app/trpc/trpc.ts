@@ -4,20 +4,20 @@ import { ZodError } from "zod";
 import { parse } from "cookie";
 import { verifyJWT } from "@/lib/services/jwt";
 
-export const createTRPCContext = async (opts: {
-  headers: Headers;
-  req: Request;
-}) => {
-  const cookieHeader = opts.req.headers.get("cookie") || "";
+export const createTRPCContext = async (opts: { headers: Headers }) => {
+  const cookieHeader = opts.headers.get("cookie") || "";
+  // console.log("cookieHeader" , cookieHeader);
   const cookies = parse(cookieHeader);
+  // console.log("Cookies", JSON.stringify(cookies))
   const token = cookies.authToken;
-  let user = null;
+  console.log("Token", token)
 
+  let user = null;
   if (token) {
     try {
-      user = verifyJWT(token);
+      user = await verifyJWT(token);
     } catch (err) {
-      console.error("Invalid or expired token");
+      console.error("Invalid or expired token:", err);
     }
   }
 
@@ -41,14 +41,19 @@ export const createCallerFactory = t.createCallerFactory;
 export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
 
-export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
-  if (!ctx?.user) {
-    throw new TRPCError({ code: "UNAUTHORIZED" });
+const isAuthenticated = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.user) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "User is not authenticated.",
+    });
   }
-
   return next({
     ctx: {
-      session: { user: ctx.user },
+      ...ctx,
+      user: ctx.user,
     },
   });
 });
+
+export const protectedProcedure = t.procedure.use(isAuthenticated);

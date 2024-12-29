@@ -31,32 +31,21 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { ImageUpload } from "./image-upload"
 import { RecentReports } from "./recent-reports"
+import { wasteSubmitSchema } from "@/schemas"
 
-const formSchema = z.object({
-  location: z.string().min(1, "Location is required"),
-  wasteType: z.string().min(1, "Waste type is required"),
-  estimatedAmount: z.string().min(1, "Estimated amount is required"),
-  description: z.string().optional(),
-})
-
-type ReportForm = z.infer<typeof formSchema>
+type ReportForm = z.infer<typeof wasteSubmitSchema>
 
 export function ReportWaste() {
   const [loading, setLoading] = useState(false)
 
   const form = useForm<ReportForm>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      location: "",
-      wasteType: "",
-      estimatedAmount: "",
-      description: "",
-    },
+    resolver: zodResolver(wasteSubmitSchema),
   })
 
   const onSubmit = async (data: ReportForm) => {
+    console.log(data)
     setLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    // await new Promise((resolve) => setTimeout(resolve, 2000))
     setLoading(false)
     form.reset()
   }

@@ -7,7 +7,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Image from "next/image"
 import { X } from 'lucide-react'
+type UploadProps = {
 
+}
 export function ImageUpload() {
   const [image, setImage] = useState<string | null>(null)
 

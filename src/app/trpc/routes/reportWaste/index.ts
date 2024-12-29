@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure, protectedProcedure} from "../../trpc";
+import {
+  createTRPCRouter,
+  publicProcedure,
+  protectedProcedure,
+} from "../../trpc";
 
 export const reportWaste = createTRPCRouter({
   submitWaste: protectedProcedure
@@ -25,7 +29,11 @@ export const reportWaste = createTRPCRouter({
         },
       });
 
-      return { message: "Waste Submitted Successfully", code: 200 };
+      return {
+        data: reportedWaste,
+        message: "Waste Submitted Successfully",
+        code: 200,
+      };
     }),
 
   markAsCompleted: protectedProcedure

@@ -64,3 +64,10 @@ export const userLoginSchema = z.object({
     .string({ message: "Password is required" })
     .min(8, { message: "Password must be at least 8 characters long" }),
 });
+
+export const wasteSubmitSchema = z.object({
+  location: z.string().min(1, "Location is required"),
+  wasteType: z.string().min(1, "Waste type is required"),
+  estimatedAmount: z.string().min(1, "Estimated amount is required"),
+  description: z.string().optional(),
+})
