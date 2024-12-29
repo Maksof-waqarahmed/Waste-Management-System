@@ -9,8 +9,7 @@ import {
   verificationEmailTemp,
   welcomeEmailTemp,
 } from "../../../../lib/services/emailTemp";
-import { hashPassword, verifyPassword } from "@/lib/services/bcrypt";
-import { serialize } from "@/lib/utils";
+import { hashPassword } from "@/lib/services/bcrypt";
 
 export const userAuth = createTRPCRouter({
   create: publicProcedure
@@ -35,13 +34,14 @@ export const userAuth = createTRPCRouter({
       }
       const tokenPayload = { email: input.email };
       const token = await generateJwtToken(tokenPayload);
+      const hashPass = await hashPassword(input.password);
 
       const newUser = await ctx.prisma.users.create({
         data: {
           email: input.email,
           firstName: input.firstName,
           lastName: input.lastName,
-          password: await hashPassword(input.password),
+          password: hashPass,
           emailToken: token,
           phone: input.phoneNo,
         },
@@ -200,7 +200,7 @@ export const userAuth = createTRPCRouter({
       await ctx.prisma.users.update({
         where: { id: user.id },
         data: {
-          password: input.newPassword,
+          password: await hashPassword(input.newPassword),
           emailToken: null,
         },
       });

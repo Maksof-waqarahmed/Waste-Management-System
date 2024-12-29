@@ -40,6 +40,7 @@ const LoginForm = () => {
           "Content-Type": "application/json",
         },
       });
+      console.log(res)
       if (!res.ok) {
         throw new Error("Failed to submit data");
       }
