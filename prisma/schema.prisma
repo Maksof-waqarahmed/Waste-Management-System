@@ -51,9 +51,9 @@ model Reports {
   amount             Int
   imgURL             String
   status             STATUS
-  collectorID        String
+  collectorID        String?
   createdAt          DateTime @default(now())
-  verificationResult Json
+  rewards            Rewards[]
 
   @@map("reports")
 }
@@ -64,8 +64,9 @@ model Rewards {
   userId         String
   points         Int      @default(0)
   createdAt      DateTime @default(now())
-  updateAt       DateTime @default(now())
-  isAvailable    Boolean  @default(true)
+  updateAt       DateTime?
+  reports        Reports  @relation(references: [id], fields: [reportId], onDelete: Cascade)
+  reportId       String
   description    String
   name           String
   collectionInfo String
