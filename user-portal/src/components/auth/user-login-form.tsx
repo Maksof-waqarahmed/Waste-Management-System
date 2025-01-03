@@ -42,18 +42,48 @@ const LoginForm = () => {
       });
 
       if (!res.ok) {
-        throw new Error("Failed to submit data");
+        const responseData = await res.json();
+
+        if (res.status === 404 && responseData.message === "User Not Found") {
+          form.setError("email", {
+            message: "Invalid Email, Please try with a valid email",
+          });
+          setLoading(false);
+        } else if (
+          res.status === 401 &&
+          responseData.message ===
+            "Invalid password. Please try again or reset your password."
+        ) {
+          form.setError("password", {
+            message:
+              "Invalid password. Please try again or reset your password.",
+          });
+          setLoading(false);
+        } else if (
+          res.status === 403 &&
+          responseData.message ===
+            "Account not verified. Please verify your email."
+        ) {
+          form.setError("email", {
+            message:
+              "Your account is not verified. Please check your email for a verification link.",
+          });
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
+        form.reset({
+          email: "",
+          password: "",
+        });
+        route.push("/dashboard");
       }
+    } catch (error: any) {
       setLoading(false);
-      form.reset({
-        email: "",
-        password: ""
-      })
-      route.push("/dashboard");
-    } catch (error) {
-      console.error(error);
+      console.error("Login failed:", error);
     }
   }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-5">

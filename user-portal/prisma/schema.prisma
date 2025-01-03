@@ -20,13 +20,13 @@ model Users {
   isVerified     Boolean           @default(false)
   createdAt      DateTime          @default(now())
   updatedAt      DateTime?
-  report         Reports[]         
-  reward         Rewards[]         
-  collectedWaste CollectedWastes[] 
-  notification   Notifications[]   
-  transaction    Transactions[]    
-  sessions       Sessions[]        
-  leaderboard    Leaderboard[]   
+  report         Reports[]
+  reward         Rewards[]
+  collectedWaste CollectedWastes[]
+  notification   Notifications[]
+  transaction    Transactions[]
+  sessions       Sessions[]
+  leaderboard    Leaderboard[]
 
   @@map("users")
 }
@@ -43,29 +43,29 @@ model Sessions {
 }
 
 model Reports {
-  id                 String   @id @default(uuid())
-  user               Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId             String
-  location           String
-  wasteType          String
-  amount             Int
-  imgURL             String
-  status             STATUS
-  collectorID        String?
-  createdAt          DateTime @default(now())
-  rewards            Rewards[]
+  id          String     @id @default(uuid())
+  user        Users      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  location    String
+  wasteType   WASTE_TYPE
+  amount      Int
+  imgURL      String
+  status      STATUS
+  collectorID String?
+  createdAt   DateTime   @default(now())
+  rewards     Rewards[]
 
   @@map("reports")
 }
 
 model Rewards {
-  id             String   @id @default(uuid())
-  user           Users    @relation(references: [id], fields: [userId], onDelete: Cascade)
+  id             String    @id @default(uuid())
+  user           Users     @relation(references: [id], fields: [userId], onDelete: Cascade)
   userId         String
-  points         Int      @default(0)
-  createdAt      DateTime @default(now())
+  points         Int       @default(0)
+  createdAt      DateTime  @default(now())
   updateAt       DateTime?
-  reports        Reports  @relation(references: [id], fields: [reportId], onDelete: Cascade)
+  reports        Reports   @relation(references: [id], fields: [reportId], onDelete: Cascade)
   reportId       String
   description    String
   name           String
@@ -122,4 +122,12 @@ model Leaderboard {
 enum STATUS {
   PENDING
   COMPLETED
+}
+
+enum WASTE_TYPE {
+  PLASTIC
+  PAPER
+  METAL
+  GLASS
+  ELECTRONIC
 }
