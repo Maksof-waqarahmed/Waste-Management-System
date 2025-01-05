@@ -4,7 +4,7 @@ import { Coins, Medal, Trash2, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface Data {
-  data: any
+  data: any;
 }
 export default function DashboardCards({ data }: Data) {
   let totalWeight = 0;
@@ -18,7 +18,10 @@ export default function DashboardCards({ data }: Data) {
     {
       title: "Total Points",
       icon: Coins,
-      value: data.points.reduce((total:any, reward:any) => total + reward.points, 0),
+      value: data.points.reduce(
+        (total: any, reward: any) => total + reward.points,
+        0
+      ),
       description: "You've earned 12 points this month",
       trend: "+5%",
       trendUp: true,
