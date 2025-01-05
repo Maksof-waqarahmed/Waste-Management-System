@@ -69,5 +69,5 @@ export const wasteSubmitSchema = z.object({
   location: z.string().min(1, "Location is required"),
   wasteType: z.string().min(1, "Waste type is required"),
   estimatedAmount: z.string().min(1, "Estimated amount is required"),
-  description: z.string().optional(),
+  weight: z.string(),
 })

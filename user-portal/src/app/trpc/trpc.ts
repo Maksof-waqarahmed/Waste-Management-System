@@ -6,11 +6,8 @@ import { verifyJWT } from "@/lib/services/jwt";
 
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   const cookieHeader = opts.headers.get("cookie") || "";
-  // console.log("cookieHeader" , cookieHeader);
   const cookies = parse(cookieHeader);
-  // console.log("Cookies", JSON.stringify(cookies))
   const token = cookies.authToken;
-  console.log("Token", token)
 
   let user = null;
   if (token) {

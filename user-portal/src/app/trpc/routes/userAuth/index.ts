@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "../../trpc";
 import { generateJwtToken } from "@/lib/services/jwt";
 import { sendEmail } from "@/lib/services/sendEmail";
 import { TRPCError } from "@trpc/server";
@@ -211,4 +215,37 @@ export const userAuth = createTRPCRouter({
       });
       return { message: "Your password has been successfully reset." };
     }),
+  getCurrentUser: protectedProcedure.query(async ({ ctx }) => {
+    if (!ctx.user) {
+      throw new TRPCError({ code: "UNAUTHORIZED", message: "Not logged in." });
+    }
+
+    //@ts-ignore
+    const email = ctx.user.email;
+    const currentUser = await ctx.prisma.users.findFirst({
+      where: { email: email },
+      include: {
+        leaderboard: {
+          select: {
+            score: true
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 1,
+        },
+        report: true,
+        reward: {
+          select: {
+            points: true,
+          },
+        },
+        transaction: true,
+      },
+    });
+    if (!currentUser) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "User not found." });
+    }
+    return currentUser;
+  }),
 });

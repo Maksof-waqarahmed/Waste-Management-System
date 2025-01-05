@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -12,43 +12,42 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { ImageUpload } from "./image-upload"
-import { RecentReports } from "./recent-reports"
-import { wasteSubmitSchema } from "@/schemas"
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { ImageUpload } from "./image-upload";
+import { RecentReports } from "./recent-reports";
+import { wasteSubmitSchema } from "@/schemas";
 
-type ReportForm = z.infer<typeof wasteSubmitSchema>
+type ReportForm = z.infer<typeof wasteSubmitSchema>;
 
 export function ReportWaste() {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<ReportForm>({
     resolver: zodResolver(wasteSubmitSchema),
-  })
+  });
 
   const onSubmit = async (data: ReportForm) => {
-    console.log(data)
-    setLoading(true)
+    setLoading(true);
     // await new Promise((resolve) => setTimeout(resolve, 2000))
-    setLoading(false)
-    form.reset()
-  }
+    setLoading(false);
+    form.reset();
+  };
 
   return (
     <div className="space-y-10">
@@ -109,7 +108,7 @@ export function ReportWaste() {
                   name="estimatedAmount"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Estimated Amount (kg)</FormLabel>
+                      <FormLabel>Estimated Amount</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
@@ -123,13 +122,14 @@ export function ReportWaste() {
                 />
                 <FormField
                   control={form.control}
-                  name="description"
+                  name="weight"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description (Optional)</FormLabel>
+                      <FormLabel>Weight (KG)</FormLabel>
                       <FormControl>
-                        <Textarea
-                          placeholder="Provide additional details"
+                      <Input
+                          type="number"
+                          placeholder="Enter waste weight"
                           {...field}
                         />
                       </FormControl>
@@ -150,6 +150,5 @@ export function ReportWaste() {
       </Card>
       <RecentReports />
     </div>
-  )
+  );
 }
-

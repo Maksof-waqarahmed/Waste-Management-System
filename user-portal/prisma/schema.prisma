@@ -8,25 +8,25 @@ datasource db {
 }
 
 model Users {
-  id             String            @id @default(uuid())
-  firstName      String
-  lastName       String
-  email          String            @unique
-  phone          String
-  password       String
-  profileImg     String?
-  emailToken     String?
-  isBlocked      Boolean           @default(false)
-  isVerified     Boolean           @default(false)
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime?
-  report         Reports[]
-  reward         Rewards[]
-  collectedWaste CollectedWastes[]
-  notification   Notifications[]
-  transaction    Transactions[]
-  sessions       Sessions[]
-  leaderboard    Leaderboard[]
+  id           String          @id @default(uuid())
+  firstName    String
+  lastName     String
+  email        String          @unique
+  phone        String
+  password     String
+  profileImg   String?
+  emailToken   String?
+  isBlocked    Boolean         @default(false)
+  isVerified   Boolean         @default(false)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime?
+  report       Reports[]
+  reward       Rewards[]
+  // collectedWaste CollectedWastes[]
+  notification Notifications[]
+  transaction  Transactions[]
+  sessions     Sessions[]
+  leaderboard  Leaderboard[]
 
   @@map("users")
 }
@@ -50,6 +50,7 @@ model Reports {
   wasteType   WASTE_TYPE
   amount      Int
   imgURL      String
+  weight      Int        @default(0)
   status      STATUS
   collectorID String?
   createdAt   DateTime   @default(now())
@@ -67,22 +68,18 @@ model Rewards {
   updateAt       DateTime?
   reports        Reports   @relation(references: [id], fields: [reportId], onDelete: Cascade)
   reportId       String
-  description    String
-  name           String
-  collectionInfo String
-
   @@map("rewards")
 }
 
-model CollectedWastes {
-  id             String   @id @default(uuid())
-  user           Users    @relation(references: [id], fields: [collectorId], onDelete: Cascade)
-  collectorId    String
-  collectionDate DateTime @default(now())
-  status         STATUS
+// model CollectedWastes {
+//   id             String   @id @default(uuid())
+//   user           Users    @relation(references: [id], fields: [collectorId], onDelete: Cascade)
+//   collectorId    String
+//   collectionDate DateTime @default(now())
+//   status         STATUS
 
-  @@map("collected-wastes")
-}
+//   @@map("collected-wastes")
+// }
 
 model Notifications {
   id        String   @id @default(uuid())
@@ -113,7 +110,6 @@ model Leaderboard {
   user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   score     Int
-  rank      Int
   createdAt DateTime @default(now())
 
   @@map("leaderboard")
