@@ -19,7 +19,6 @@ export async function GET(req: Request) {
       where: { id: user.id },
       include: {
         reward: true,
-        collectedWaste: true,
         leaderboard: true,
       },
     });

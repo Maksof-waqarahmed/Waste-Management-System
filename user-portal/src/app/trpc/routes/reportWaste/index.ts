@@ -28,7 +28,7 @@ export const reportWaste = createTRPCRouter({
       //@ts-ignore
       const userId = ctx.user.id;
       const validatedWasteType = wasteTypeEnum.parse(input.wasteType);
-      const rewardPoints = input.weight * 10;
+      const rewardPoints = Number(input.weight * 2);
 
       const reportedWaste = await ctx.prisma.reports.create({
         data: {
@@ -38,6 +38,7 @@ export const reportWaste = createTRPCRouter({
           imgURL: input.image,
           status: "COMPLETED",
           userId: userId,
+          weight: input.weight,
         },
       });
 
@@ -54,10 +55,14 @@ export const reportWaste = createTRPCRouter({
       });
 
       if (leaderBoardEntry) {
+        // const userRank =
+        // leaderBoardEntry.findIndex((entry) => entry.userId === userId) + 1;
+
         leaderBoardEntry = await ctx.prisma.leaderboard.update({
           where: { id: leaderBoardEntry.id },
           data: {
             score: leaderBoardEntry.score + rewardPoints,
+            rank: leaderBoardEntry.rank + 1
           },
         });
       } else {
@@ -65,23 +70,20 @@ export const reportWaste = createTRPCRouter({
           data: {
             userId: userId,
             score: rewardPoints,
+            rank: 1,
           },
         });
       }
 
-      const sortedLeaderboard = await ctx.prisma.leaderboard.findMany({
-        orderBy: {
-          score: "desc",
-        },
-      });
-
-      const userRank =
-        sortedLeaderboard.findIndex((entry) => entry.userId === userId) + 1;
+      // const sortedLeaderboard = await ctx.prisma.leaderboard.findMany({
+      //   orderBy: {
+      //     score: "desc",
+      //   },
+      // });
 
       return {
         data: reportedWaste,
         reward: reward,
-        userRank: userRank,
         message: "Waste Submitted Successfully and Leaderboard Updated",
         code: 200,
       };

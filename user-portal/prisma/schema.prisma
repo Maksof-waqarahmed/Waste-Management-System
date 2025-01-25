@@ -60,14 +60,15 @@ model Reports {
 }
 
 model Rewards {
-  id             String    @id @default(uuid())
-  user           Users     @relation(references: [id], fields: [userId], onDelete: Cascade)
-  userId         String
-  points         Int       @default(0)
-  createdAt      DateTime  @default(now())
-  updateAt       DateTime?
-  reports        Reports   @relation(references: [id], fields: [reportId], onDelete: Cascade)
-  reportId       String
+  id        String    @id @default(uuid())
+  user      Users     @relation(references: [id], fields: [userId], onDelete: Cascade)
+  userId    String
+  points    Int       @default(0)
+  createdAt DateTime  @default(now())
+  updateAt  DateTime?
+  reports   Reports   @relation(references: [id], fields: [reportId], onDelete: Cascade)
+  reportId  String
+
   @@map("rewards")
 }
 
@@ -104,12 +105,12 @@ model Transactions {
 
   @@map("transaction")
 }
-
 model Leaderboard {
   id        String   @id @default(uuid())
   user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
-  score     Int
+  score     Int      @default(0)
+  rank      Int      @default(0)
   createdAt DateTime @default(now())
 
   @@map("leaderboard")

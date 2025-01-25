@@ -14,15 +14,16 @@ export default function DashboardCards({ data }: Data) {
     }, 0);
   }
 
+  const point = data.points.reduce(
+    (total: any, reward: any) => total + reward.points,
+    0
+  );
   const cards = [
     {
       title: "Total Points",
       icon: Coins,
-      value: data.points.reduce(
-        (total: any, reward: any) => total + reward.points,
-        0
-      ),
-      description: "You've earned 12 points this month",
+      value: point,
+      description: `You've earned ${point} points this month`,
       trend: "+5%",
       trendUp: true,
     },
@@ -30,15 +31,15 @@ export default function DashboardCards({ data }: Data) {
       title: "Waste Collected",
       icon: Trash2,
       value: totalWeight,
-      description: "You've collected 80 kg this month",
+      description: `You've collected ${totalWeight} kg this month`,
       trend: "+12%",
       trendUp: true,
     },
     {
       title: "Leaderboard Position",
       icon: Medal,
-      value: data.leaderBoard[0]?.score || "#N/A",
-      description: "You're ranked #5 this month",
+      value: "#" +data.leaderBoard[0]?.rank || 0,
+      description: `You're ranked #${data.leaderBoard[0]?.rank || 0} this month`,
       trend: "+2",
       trendUp: true,
     },

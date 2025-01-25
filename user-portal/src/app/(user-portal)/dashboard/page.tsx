@@ -13,7 +13,9 @@ import { api } from "@/trpc-server/react";
 
 export default function Dashboard() {
   const { data } = api.userAuth.getCurrentUser.useQuery();
-  console.log("Data", data);
+  if (!data) {
+    return <div>Loading</div>;
+  }
   const data1 = {
     collectedWaste: data?.report || [],
     leaderBoard: data?.leaderboard || [],
@@ -32,7 +34,7 @@ export default function Dashboard() {
       </div>
       <DashboardCards data={data1} />
       <DashboardCharts />
-      <DashboardTable />
+      <DashboardTable data={data.report} />
     </div>
   );
 }

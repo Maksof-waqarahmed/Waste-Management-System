@@ -227,7 +227,8 @@ export const userAuth = createTRPCRouter({
       include: {
         leaderboard: {
           select: {
-            score: true
+            score: true,
+            rank: true,
           },
           orderBy: {
             createdAt: "desc",

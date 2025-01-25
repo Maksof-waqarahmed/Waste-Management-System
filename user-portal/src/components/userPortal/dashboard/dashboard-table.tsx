@@ -1,19 +1,27 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
-const recentActivities = [
-  { date: "2023-06-01", type: "Plastic", amount: "5 kg", points: 10 },
-  { date: "2023-06-03", type: "Paper", amount: "3 kg", points: 6 },
-  { date: "2023-06-05", type: "Glass", amount: "2 kg", points: 4 },
-  { date: "2023-06-07", type: "Metal", amount: "1 kg", points: 3 },
-]
-
-export default function DashboardTable() {
+export default function DashboardTable({ data }: any) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>Recent Activities</CardTitle>
-        <CardDescription>Your latest waste collection activities</CardDescription>
+        <CardDescription>
+          Your latest waste collection activities
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
@@ -21,23 +29,27 @@ export default function DashboardTable() {
             <TableRow>
               <TableHead>Date</TableHead>
               <TableHead>Waste Type</TableHead>
-              <TableHead>Amount</TableHead>
-              <TableHead>Points Earned</TableHead>
+              <TableHead>Weight</TableHead>
+              <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {recentActivities.map((activity, index) => (
+            {data.map((activity: any, index: number) => (
               <TableRow key={index}>
-                <TableCell>{activity.date}</TableCell>
-                <TableCell>{activity.type}</TableCell>
-                <TableCell>{activity.amount}</TableCell>
-                <TableCell>{activity.points}</TableCell>
+                <TableCell>{`${new Date(activity.createdAt).getDate()}/${
+                  new Date(activity.createdAt).getMonth() + 1
+                }/${new Date(activity.createdAt)
+                  .getFullYear()
+                  .toString()
+                  .slice(-2)}`}</TableCell>
+                <TableCell>{activity.wasteType}</TableCell>
+                <TableCell>{activity.weight} Kg</TableCell>
+                <TableCell>{activity.status}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </CardContent>
     </Card>
-  )
+  );
 }
-
