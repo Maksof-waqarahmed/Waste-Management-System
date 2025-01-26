@@ -2,6 +2,7 @@
 import { Reports, Leaderboard, Rewards } from "@prisma/client";
 import { Coins, Medal, Trash2, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { totalRewards } from "@/lib/utils";
 
 interface Data {
   data: any;
@@ -14,10 +15,7 @@ export default function DashboardCards({ data }: Data) {
     }, 0);
   }
 
-  const point = data.points.reduce(
-    (total: any, reward: any) => total + reward.points,
-    0
-  );
+  const point = totalRewards(data.points);
   const cards = [
     {
       title: "Total Points",

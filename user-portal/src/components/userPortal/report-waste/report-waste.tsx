@@ -82,7 +82,7 @@ export function ReportWaste() {
   };
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8">
       <Card>
         <CardHeader>
           <CardTitle>Report Details</CardTitle>
@@ -181,7 +181,6 @@ export function ReportWaste() {
           </Form>
         </CardContent>
       </Card>
-      <RecentReports />
     </div>
   );
 }

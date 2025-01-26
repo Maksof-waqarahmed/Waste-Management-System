@@ -14,6 +14,7 @@ const wasteTypeEnum = z.enum([
   "ELECTRONIC",
 ]);
 
+//@ts-ignore
 export const reportWaste = createTRPCRouter({
   submitWaste: protectedProcedure
     .input(
@@ -50,7 +51,7 @@ export const reportWaste = createTRPCRouter({
         },
       });
 
-      const reward = await ctx.prisma.rewards.create({
+      await ctx.prisma.rewards.create({
         data: {
           userId: userId,
           points: rewardPoints,
@@ -63,7 +64,7 @@ export const reportWaste = createTRPCRouter({
       });
 
       if (leaderBoardEntry) {
-        leaderBoardEntry = await ctx.prisma.leaderboard.update({
+        await ctx.prisma.leaderboard.update({
           where: { id: leaderBoardEntry.id },
           data: {
             score: leaderBoardEntry.score + rewardPoints,
@@ -71,7 +72,7 @@ export const reportWaste = createTRPCRouter({
           },
         });
       } else {
-        leaderBoardEntry = await ctx.prisma.leaderboard.create({
+        await ctx.prisma.leaderboard.create({
           data: {
             userId: userId,
             score: rewardPoints,
@@ -81,7 +82,7 @@ export const reportWaste = createTRPCRouter({
       }
 
       const notificationMessage = `Your waste submission has been recorded, and you earned ${rewardPoints} points. Check the leaderboard to see your rank!`;
-      const notification = await ctx.prisma.notifications.create({
+      await ctx.prisma.notifications.create({
         data: {
           userId: userId,
           message: notificationMessage,
@@ -96,19 +97,26 @@ export const reportWaste = createTRPCRouter({
         code: 200,
       };
     }),
-  getRecentReports: protectedProcedure.query(async ({ ctx }) => {
-    const recentReports = await ctx.prisma.reports.findMany({
-      select: {
-        location: true,
-        wasteType: true,
-        amount: true,
-        createdAt: true,
-        status: true,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-    return { data: recentReports, code: 200 };
-  }),
+  getAllReports: protectedProcedure
+    .input(z.object({ take: z.number(), skip: z.number() }))
+    .query(async ({ input, ctx }) => {
+      //@ts-ignore
+      const userId = ctx.user.id;
+      const { take, skip } = input;
+      const allReports = await ctx.prisma.reports.findMany({
+        where: {
+          userId: userId,
+        },
+        select: {
+          location: true,
+          wasteType: true,
+          amount: true,
+          createdAt: true,
+          status: true,
+        },
+        take,
+        skip,
+      });
+      return { data: allReports, code: 200 };
+    }),
 });

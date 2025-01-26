@@ -4,7 +4,7 @@ const secretKey: string = process.env.JWT_SECRET || "123143454325";
 
 export const generateJwtToken = (
   payload: Record<string, any>,
-  expiresIn: `${string}m` = "15m"
+  expiresIn: `${string}m` = "30m"
 ) => {
   return new Promise<string>((resolve, reject) => {
     try {
