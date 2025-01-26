@@ -30,7 +30,7 @@ export default function DashboardCards({ data }: Data) {
     {
       title: "Waste Collected",
       icon: Trash2,
-      value: totalWeight,
+      value: totalWeight + " kg",
       description: `You've collected ${totalWeight} kg this month`,
       trend: "+12%",
       trendUp: true,

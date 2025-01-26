@@ -5,6 +5,7 @@ import "./globals.css";
 import { TRPCReactProvider } from "@/trpc-server/react";
 import { headers } from "next/headers";
 import { cache } from "react";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Waste Managemnet System",
@@ -20,6 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <TRPCReactProvider headersPromise={getHeaders()}>
+        <Toaster position="top-right" reverseOrder={false} />
           {children}
         </TRPCReactProvider>
       </body>

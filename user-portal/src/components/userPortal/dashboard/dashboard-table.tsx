@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -44,7 +45,7 @@ export default function DashboardTable({ data }: any) {
                   .slice(-2)}`}</TableCell>
                 <TableCell>{activity.wasteType}</TableCell>
                 <TableCell>{activity.weight} Kg</TableCell>
-                <TableCell>{activity.status}</TableCell>
+                <TableCell><Badge className="bg-green-800 h-6">{activity.status}</Badge> </TableCell>
               </TableRow>
             ))}
           </TableBody>

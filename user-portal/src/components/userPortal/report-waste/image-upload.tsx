@@ -1,32 +1,36 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import Image from "next/image"
-import { X } from 'lucide-react'
-type UploadProps = {
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import Image from "next/image";
+import { X } from "lucide-react";
 
+interface ImageUploadProps {
+  onImageChange: (image: string | null) => void;
 }
-export function ImageUpload() {
-  const [image, setImage] = useState<string | null>(null)
+export function ImageUpload({ onImageChange }: ImageUploadProps) {
+  const [image, setImage] = useState<string | null>(null);
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result as string)
-      }
-      reader.readAsDataURL(file)
+        onImageChange(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      onImageChange(null);
     }
-  }
+  };
 
   const handleRemoveImage = () => {
-    setImage(null)
-  }
+    setImage(null);
+    onImageChange(null);
+  };
 
   return (
     <Card>
@@ -37,7 +41,7 @@ export function ImageUpload() {
             id="image-upload"
             type="file"
             accept="image/*"
-            onChange={handleImageUpload}
+            onChange={handleImageChange}
           />
           {image && (
             <div className="mt-4 relative">
@@ -62,6 +66,5 @@ export function ImageUpload() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
-

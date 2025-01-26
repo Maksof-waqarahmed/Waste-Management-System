@@ -22,7 +22,6 @@ model Users {
   updatedAt    DateTime?
   report       Reports[]
   reward       Rewards[]
-  // collectedWaste CollectedWastes[]
   notification Notifications[]
   transaction  Transactions[]
   sessions     Sessions[]
@@ -72,16 +71,6 @@ model Rewards {
   @@map("rewards")
 }
 
-// model CollectedWastes {
-//   id             String   @id @default(uuid())
-//   user           Users    @relation(references: [id], fields: [collectorId], onDelete: Cascade)
-//   collectorId    String
-//   collectionDate DateTime @default(now())
-//   status         STATUS
-
-//   @@map("collected-wastes")
-// }
-
 model Notifications {
   id        String   @id @default(uuid())
   user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -105,6 +94,7 @@ model Transactions {
 
   @@map("transaction")
 }
+
 model Leaderboard {
   id        String   @id @default(uuid())
   user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)

@@ -28,25 +28,57 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { ImageUpload } from "./image-upload";
 import { RecentReports } from "./recent-reports";
 import { wasteSubmitSchema } from "@/schemas";
+import { api } from "@/trpc-server/react";
+import toast from "react-hot-toast";
 
 type ReportForm = z.infer<typeof wasteSubmitSchema>;
-
+const wasteTypeEnum = z.enum([
+  "PLASTIC",
+  "PAPER",
+  "METAL",
+  "GLASS",
+  "ELECTRONIC",
+]);
 export function ReportWaste() {
-  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState<string | null>(null);
+  const { mutateAsync: submitWaste, isLoading } =
+    api.wasteSubmit.submitWaste.useMutation({
+      onError: (error) => {
+        console.error("API error:", error);
+      },
+    });
+
+  const getChildImage = (image: string | null) => {
+    setImage(image);
+  };
 
   const form = useForm<ReportForm>({
     resolver: zodResolver(wasteSubmitSchema),
   });
 
   const onSubmit = async (data: ReportForm) => {
-    setLoading(true);
-    // await new Promise((resolve) => setTimeout(resolve, 2000))
-    setLoading(false);
-    form.reset();
+    try {
+      const validatedWasteType = wasteTypeEnum.parse(data.wasteType);
+      const res = await submitWaste({
+        estimatedAmount: Number(data.estimatedAmount),
+        image: image!,
+        location: data.location,
+        wasteType: validatedWasteType,
+        weight: Number(data.weight),
+      });
+      form.reset({
+        location: "",
+        wasteType: "",
+        estimatedAmount: "",
+        weight: "",
+      });
+      toast.success("Waste Submitted Successfully!");
+    } catch (error) {
+      console.error("Unexpected error", error);
+    }
   };
 
   return (
@@ -91,12 +123,13 @@ export function ReportWaste() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="plastic">Plastic</SelectItem>
-                          <SelectItem value="paper">Paper</SelectItem>
-                          <SelectItem value="metal">Metal</SelectItem>
-                          <SelectItem value="glass">Glass</SelectItem>
-                          <SelectItem value="organic">Organic</SelectItem>
-                          <SelectItem value="electronic">Electronic</SelectItem>
+                          {wasteTypeEnum.options.map((option) => {
+                            return (
+                              <SelectItem key={option} value={option}>
+                                {option}
+                              </SelectItem>
+                            );
+                          })}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -127,7 +160,7 @@ export function ReportWaste() {
                     <FormItem>
                       <FormLabel>Weight (KG)</FormLabel>
                       <FormControl>
-                      <Input
+                        <Input
                           type="number"
                           placeholder="Enter waste weight"
                           {...field}
@@ -138,10 +171,10 @@ export function ReportWaste() {
                   )}
                 />
               </div>
-              <ImageUpload />
+              <ImageUpload onImageChange={getChildImage} />
               <div className="flex justify-end">
-                <Button type="submit" disabled={loading}>
-                  {loading ? "Submitting..." : "Submit Report"}
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? "Submitting..." : "Submit Report"}
                 </Button>
               </div>
             </form>

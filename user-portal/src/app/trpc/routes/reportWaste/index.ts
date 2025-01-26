@@ -4,6 +4,7 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "../../trpc";
+import cloudinary from "@/lib/cloudinary";
 
 const wasteTypeEnum = z.enum([
   "PLASTIC",
@@ -29,13 +30,20 @@ export const reportWaste = createTRPCRouter({
       const userId = ctx.user.id;
       const validatedWasteType = wasteTypeEnum.parse(input.wasteType);
       const rewardPoints = Number(input.weight * 2);
+      const uploadResponse = await cloudinary.v2.uploader.upload(
+        input.image,
+        {
+          folder: "waste_reports",
+        },
+        (error, result) => {}
+      );
 
       const reportedWaste = await ctx.prisma.reports.create({
         data: {
           location: input.location,
           wasteType: validatedWasteType,
           amount: input.estimatedAmount,
-          imgURL: input.image,
+          imgURL: uploadResponse.secure_url,
           status: "COMPLETED",
           userId: userId,
           weight: input.weight,
@@ -55,14 +63,11 @@ export const reportWaste = createTRPCRouter({
       });
 
       if (leaderBoardEntry) {
-        // const userRank =
-        // leaderBoardEntry.findIndex((entry) => entry.userId === userId) + 1;
-
         leaderBoardEntry = await ctx.prisma.leaderboard.update({
           where: { id: leaderBoardEntry.id },
           data: {
             score: leaderBoardEntry.score + rewardPoints,
-            rank: leaderBoardEntry.rank + 1
+            rank: leaderBoardEntry.rank + 1,
           },
         });
       } else {
@@ -75,48 +80,22 @@ export const reportWaste = createTRPCRouter({
         });
       }
 
-      // const sortedLeaderboard = await ctx.prisma.leaderboard.findMany({
-      //   orderBy: {
-      //     score: "desc",
-      //   },
-      // });
+      const notificationMessage = `Your waste submission has been recorded, and you earned ${rewardPoints} points. Check the leaderboard to see your rank!`;
+      const notification = await ctx.prisma.notifications.create({
+        data: {
+          userId: userId,
+          message: notificationMessage,
+          type: "WASTE_SUBMISSION",
+          isRead: false,
+        },
+      });
 
       return {
-        data: reportedWaste,
-        reward: reward,
-        message: "Waste Submitted Successfully and Leaderboard Updated",
+        message:
+          "Waste Submitted Successfully, Leaderboard Updated, and Notification Created",
         code: 200,
       };
     }),
-
-  // markAsCompleted: protectedProcedure
-  //   .input(
-  //     z.object({
-  //       reportId: z.string(),
-  //       userId: z.string(),
-  //     })
-  //   )
-  //   .mutation(async ({ ctx, input }) => {
-  //     const updatedReport = await ctx.prisma.reports.update({
-  //       where: { id: input.reportId },
-  //       data: { status: "COMPLETED" },
-  //     });
-
-  //     const reward = await ctx.prisma.rewards.create({
-  //       data: {
-  //         points: 10,
-  //         weight: ,
-  //         userId: input.userId,
-  //         reportId: input.reportId,
-  //       },
-  //     });
-
-  //     return {
-  //       message: "Report marked as completed and reward granted",
-  //       code: 200,
-  //     };
-  //   }),
-
   getRecentReports: protectedProcedure.query(async ({ ctx }) => {
     const recentReports = await ctx.prisma.reports.findMany({
       select: {

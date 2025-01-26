@@ -235,13 +235,17 @@ export const userAuth = createTRPCRouter({
           },
           take: 1,
         },
-        report: true,
+        report: { orderBy: { createdAt: "desc" }, take: 5 },
         reward: {
           select: {
             points: true,
           },
         },
         transaction: true,
+        notification: {
+          where: { isRead: false },
+          orderBy: { createdAt: "desc" },
+        },
       },
     });
     if (!currentUser) {
