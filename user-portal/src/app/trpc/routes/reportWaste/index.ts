@@ -14,7 +14,6 @@ const wasteTypeEnum = z.enum([
   "ELECTRONIC",
 ]);
 
-//@ts-ignore
 export const reportWaste = createTRPCRouter({
   submitWaste: protectedProcedure
     .input(
@@ -36,8 +35,19 @@ export const reportWaste = createTRPCRouter({
         {
           folder: "waste_reports",
         },
-        (error, result) => {}
+        (error, result) => {
+          if (error) {
+            console.log("Error uploading image to cloudinary", error);
+          }
+        }
       );
+
+      if (!uploadResponse) {
+        return {
+          message: "Error uploading image to Cloudinary",
+          code: 500,
+        };
+      }
 
       const reportedWaste = await ctx.prisma.reports.create({
         data: {
