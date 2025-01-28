@@ -1,47 +1,54 @@
-"use client"
+"use client";
 
-import React from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { Bell, Coins, LogOut, Menu, Search, User } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Bell, Coins, LogOut, Menu, Search, User } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import logo from "../assets/images/logo.png"
-import { UseMediaQuery } from "./hooks/useMediaQuery"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import logo from "../assets/images/logo.png";
+import { UseMediaQuery } from "./hooks/useMediaQuery";
+import { useRouter } from "next/navigation";
 
 interface HeaderProps {
-  onMenuClick: () => void
-  totalEarnings: number
+  onMenuClick: () => void;
+  totalEarnings: number;
 }
 
 const Header: React.FC<HeaderProps> = ({ onMenuClick, totalEarnings }) => {
-  const isMobile = UseMediaQuery("(max-width: 768px)")
-  const notifications: any[] = [] // Replace with actual notifications data
-
+  const isMobile = UseMediaQuery("(max-width: 768px)");
+  const notifications: any[] = []; // Replace with actual notifications data
+  const router = useRouter();
   const handleNotificationClick = (id: string) => {
     // Handle notification click
-  }
+  };
 
   const handleLogout = async () => {
     await fetch("/api/logout", {
       method: "POST",
-    })
-  }
+    });
+    router.push("/auth/login");
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white">
       <div className="flex items-center justify-between px-4 py-2">
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="icon" onClick={onMenuClick} className="lg:hidden">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onMenuClick}
+            className="lg:hidden"
+          >
             <Menu className="h-6 w-6 text-green-700" />
           </Button>
           <Link href="/dashboard" className="flex items-center space-x-2">
@@ -93,7 +100,9 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, totalEarnings }) => {
                   >
                     <div className="flex flex-col">
                       <span className="font-medium">{item.type}</span>
-                      <span className="text-sm text-green-600">{item.message}</span>
+                      <span className="text-sm text-green-600">
+                        {item.message}
+                      </span>
                     </div>
                   </DropdownMenuItem>
                 ))
@@ -103,16 +112,24 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, totalEarnings }) => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Badge variant="outline" className="flex items-center space-x-1 px-3 py-1">
+          <Badge
+            variant="outline"
+            className="flex items-center space-x-1 px-3 py-1"
+          >
             <Coins className="h-4 w-4 text-green-700" />
-            <span className="text-sm font-semibold">{totalEarnings.toFixed(2)}</span>
+            <span className="text-sm font-semibold">
+              {totalEarnings.toFixed(2)}
+            </span>
           </Badge>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    alt="@shadcn"
+                  />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </Button>
@@ -130,15 +147,14 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, totalEarnings }) => {
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleLogout}>
                 <LogOut className="mr-2 h-4 w-4" />
-                <Link href="/auth/login">Log out</Link>
+                Log out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
     </header>
-  )
-}
+  );
+};
 
-export default Header
-
+export default Header;
