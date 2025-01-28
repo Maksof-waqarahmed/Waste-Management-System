@@ -8,10 +8,11 @@ import { Award, Crown, Medal, Trophy } from "lucide-react";
 import { LeaderBoardEntry } from "./leader-board-entry";
 import { Pagination } from "@/components/ui/pagination";
 import { api } from "@/trpc-server/react";
+import LeaderSkeleton from "@/app/(user-portal)/dashboard/leader-board/skeleton";
 
 const LeaderBoard = () => {
   const { data } = api.leaderBoard.getLeaderBoard.useQuery();
-  if (!data) return <div>Loading...</div>;
+  if (!data) return <div><LeaderSkeleton/></div>;
 
   return (
     <Card>

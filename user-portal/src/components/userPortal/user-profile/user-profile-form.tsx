@@ -21,7 +21,7 @@ const profileFormSchema = z.object({
   firstName: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  lastName: z.string().email({
+  lastName: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
   profileImage: z.string().optional(),
@@ -33,10 +33,9 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 interface UserProfileFormProps {
   user: ProfileFormValues;
-  onUpdateUser: (user: Partial<ProfileFormValues>) => void;
 }
 
-export function UserProfileForm({ user, onUpdateUser }: UserProfileFormProps) {
+export function UserProfileForm({ user }: UserProfileFormProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<ProfileFormValues>({
@@ -46,7 +45,7 @@ export function UserProfileForm({ user, onUpdateUser }: UserProfileFormProps) {
   });
 
   function onSubmit(data: ProfileFormValues) {
-    setIsLoading(true);
+    console.log(data);
   }
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

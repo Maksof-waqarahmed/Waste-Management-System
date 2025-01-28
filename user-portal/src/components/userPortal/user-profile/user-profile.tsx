@@ -7,18 +7,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { useUser } from "@/lib/user-context";
 import React from "react";
+import ProfileSkeletonUI from "@/app/(user-portal)/dashboard/user-profile/skeleton";
 
 export default function UserProfile() {
   const { user } = useUser();
-  // console.log(user);
-  // const [user, setUser] = useState();
 
-  const handleUpdateUser = (updatedUser: Partial<typeof user>) => {
-    console.log(updatedUser);
-  };
-  if (!user) return <div>Loading</div>;
+  if (!user) return <div><ProfileSkeletonUI/></div>;
   return (
     <div className="space-y-6">
+      
       <UserProfileHeader user={user} />
       <Tabs defaultValue="profile" className="w-full">
         <TabsList>
@@ -27,7 +24,7 @@ export default function UserProfile() {
         <TabsContent value="profile">
           <Card>
             <CardContent className="pt-6">
-              <UserProfileForm user={user} onUpdateUser={handleUpdateUser} />
+              <UserProfileForm user={user}/>
             </CardContent>
           </Card>
         </TabsContent>
