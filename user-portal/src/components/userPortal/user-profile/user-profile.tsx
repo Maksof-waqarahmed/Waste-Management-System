@@ -1,31 +1,28 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { UserProfileForm } from "./user-profile-form"
-import { UserProfileHeader } from "./user-profile-header"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent } from "@/components/ui/card"
-import { UserStats } from "./user-stats"
+import { useState } from "react";
+import { UserProfileForm } from "./user-profile-form";
+import { UserProfileHeader } from "./user-profile-header";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent } from "@/components/ui/card";
+import { useUser } from "@/lib/user-context";
+import React from "react";
 
 export default function UserProfile() {
-  const [user, setUser] = useState({
-    name: "John Doe",
-    email: "john.doe@example.com",
-    bio: "I'm a software developer passionate about creating user-friendly applications.",
-    profileImage: "",
-  })
+  const { user } = useUser();
+  // console.log(user);
+  // const [user, setUser] = useState();
 
   const handleUpdateUser = (updatedUser: Partial<typeof user>) => {
-    setUser((prevUser) => ({ ...prevUser, ...updatedUser }))
-  }
-
+    console.log(updatedUser);
+  };
+  if (!user) return <div>Loading</div>;
   return (
     <div className="space-y-6">
       <UserProfileHeader user={user} />
       <Tabs defaultValue="profile" className="w-full">
         <TabsList>
           <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="stats">Stats</TabsTrigger>
         </TabsList>
         <TabsContent value="profile">
           <Card>
@@ -34,15 +31,7 @@ export default function UserProfile() {
             </CardContent>
           </Card>
         </TabsContent>
-        <TabsContent value="stats">
-          <Card>
-            <CardContent className="pt-6">
-              <UserStats />
-            </CardContent>
-          </Card>
-        </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
-
