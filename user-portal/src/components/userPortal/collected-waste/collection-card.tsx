@@ -43,7 +43,14 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
           </div>
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-gray-500" />
-            <span className="text-sm text-gray-600">{createdAt}</span>
+            <span className="text-sm text-gray-600">{`${new Date(
+              createdAt
+            ).getDate()}/${new Date(createdAt).getMonth() + 1}/${new Date(
+              createdAt
+            )
+              .getFullYear()
+              .toString()
+              .slice(-2)}`}</span>
           </div>
         </div>
       </CardContent>

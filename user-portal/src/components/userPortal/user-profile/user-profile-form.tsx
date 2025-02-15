@@ -16,6 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Loader2, Camera } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { api } from "@/trpc-server/react";
+import toast from "react-hot-toast";
 
 const profileFormSchema = z.object({
   firstName: z.string().min(2, {
@@ -36,7 +38,12 @@ interface UserProfileFormProps {
 }
 
 export function UserProfileForm({ user }: UserProfileFormProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const { mutateAsync: updateProfile, isLoading } =
+    api.userProfile.updateUserProfile.useMutation({
+      onError: (error) => {
+        console.error("API error:", error);
+      },
+    });
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
@@ -44,8 +51,18 @@ export function UserProfileForm({ user }: UserProfileFormProps) {
     mode: "onChange",
   });
 
-  function onSubmit(data: ProfileFormValues) {
-    console.log(data);
+  async function onSubmit(data: ProfileFormValues) {
+    try {
+      const res = await updateProfile({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        profileImg: data.profileImage || "",
+      });
+      console.log(res);
+      toast.success("Profile Updated Successfully!");
+    } catch (error:any) {
+      console.error("Unexpected error", error.message);
+    }
   }
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,115 +77,121 @@ export function UserProfileForm({ user }: UserProfileFormProps) {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="profileImage"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Profile Image</FormLabel>
-              <FormControl>
-                <div className="flex items-center space-x-4">
-                  <Avatar className="w-24 h-24">
-                    <AvatarImage
-                      src={field.value}
-                      alt={form.getValues("firstName")}
-                    />
-                    <AvatarFallback>
-                      {form
-                        .getValues("firstName")
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </AvatarFallback>
-                  </Avatar>
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    id="profile-image"
-                    onChange={handleImageUpload}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    className="h-9 px-4"
-                    onClick={() =>
-                      document.getElementById("profile-image")?.click()
-                    }
-                  >
-                    <Camera className="w-4 h-4 mr-2" />
-                    Change Image
-                  </Button>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <FormField
-            control={form.control}
-            name="firstName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>First Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Your first name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="lastName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Last Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Your last name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <>
+      {isLoading ? (
+        "Loading"
+      ) : (
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="profileImage"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Profile Image</FormLabel>
+                  <FormControl>
+                    <div className="flex items-center space-x-4">
+                      <Avatar className="w-24 h-24">
+                        <AvatarImage
+                          src={field.value}
+                          alt={form.getValues("firstName")}
+                        />
+                        <AvatarFallback>
+                          {form
+                            .getValues("firstName")
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")}
+                        </AvatarFallback>
+                      </Avatar>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        id="profile-image"
+                        onChange={handleImageUpload}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="h-9 px-4"
+                        onClick={() =>
+                          document.getElementById("profile-image")?.click()
+                        }
+                      >
+                        <Camera className="w-4 h-4 mr-2" />
+                        Change Image
+                      </Button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>First Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Your first name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Last Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Your last name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="Your email" {...field} disabled />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Number</FormLabel>
-                <FormControl>
-                  <Input placeholder="Your number" {...field} disabled />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Your email" {...field} disabled />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Number</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Your number" {...field} disabled />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-        <Button type="submit" disabled={isLoading}>
-          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {isLoading ? "Updating..." : "Update profile"}
-        </Button>
-      </form>
-    </Form>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isLoading ? "Updating..." : "Update profile"}
+            </Button>
+          </form>
+        </Form>
+      )}
+    </>
   );
 }

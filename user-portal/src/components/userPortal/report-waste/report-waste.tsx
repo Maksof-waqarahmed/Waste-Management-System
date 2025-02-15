@@ -62,7 +62,7 @@ export function ReportWaste() {
   const onSubmit = async (data: ReportForm) => {
     try {
       const validatedWasteType = wasteTypeEnum.parse(data.wasteType);
-      const res = await submitWaste({
+      await submitWaste({
         estimatedAmount: Number(data.estimatedAmount),
         image: image!,
         location: data.location,

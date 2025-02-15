@@ -1,8 +1,9 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../../trpc";
+import cloudinary from "@/lib/cloudinary";
 
 export const userProfile = createTRPCRouter({
-  updateUsetProfile: protectedProcedure
+  updateUserProfile: protectedProcedure
     .input(
       z.object({
         firstName: z.string(),
@@ -14,6 +15,24 @@ export const userProfile = createTRPCRouter({
       //@ts-ignore
       const userId = ctx.user.id;
       const { firstName, lastName, profileImg } = input;
+      const uploadResponse = await cloudinary.v2.uploader.upload(
+        profileImg || "",
+        {
+          folder: "users_profiles",
+        },
+        (error, result) => {
+          if (error) {
+            console.log("Error uploading image to cloudinary", error);
+          }
+        }
+      );
+
+      if (!uploadResponse) {
+        return {
+          message: "Error uploading image to Cloudinary",
+          code: 500,
+        };
+      }
       return ctx.prisma.users.update({
         where: {
           id: userId,
@@ -21,7 +40,7 @@ export const userProfile = createTRPCRouter({
         data: {
           firstName,
           lastName,
-          profileImg,
+          profileImg: uploadResponse.secure_url,
         },
       });
     }),
