@@ -26,10 +26,10 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onMenuClick, totalEarnings }) => {
   const isMobile = UseMediaQuery("(max-width: 768px)");
-  const notifications: any[] = []; // Replace with actual notifications data
+  const notifications: any[] = ["waqar", "Ahmed"];
   const router = useRouter();
   const handleNotificationClick = (id: string) => {
-    // Handle notification click
+    
   };
 
   const handleLogout = async () => {

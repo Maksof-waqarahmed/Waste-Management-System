@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -53,14 +52,13 @@ export function UserProfileForm({ user }: UserProfileFormProps) {
 
   async function onSubmit(data: ProfileFormValues) {
     try {
-      const res = await updateProfile({
+      await updateProfile({
         firstName: data.firstName,
         lastName: data.lastName,
         profileImg: data.profileImage || "",
       });
-      console.log(res);
       toast.success("Profile Updated Successfully!");
-    } catch (error:any) {
+    } catch (error: any) {
       console.error("Unexpected error", error.message);
     }
   }

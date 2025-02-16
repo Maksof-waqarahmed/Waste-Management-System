@@ -15,24 +15,24 @@ export const userProfile = createTRPCRouter({
       //@ts-ignore
       const userId = ctx.user.id;
       const { firstName, lastName, profileImg } = input;
-      const uploadResponse = await cloudinary.v2.uploader.upload(
-        profileImg || "",
-        {
-          folder: "users_profiles",
-        },
-        (error, result) => {
-          if (error) {
-            console.log("Error uploading image to cloudinary", error);
-          }
-        }
-      );
+      
+      let uploadedImageUrl = "";
 
-      if (!uploadResponse) {
-        return {
-          message: "Error uploading image to Cloudinary",
-          code: 500,
-        };
+      if (profileImg) {
+        try {
+          const uploadResponse = await cloudinary.v2.uploader.upload(profileImg, {
+            folder: "users_profiles",
+          });
+          uploadedImageUrl = uploadResponse.secure_url;
+        } catch (error) {
+          console.error("Error uploading image to Cloudinary", error);
+          return {
+            message: "Error uploading image to Cloudinary",
+            code: 500,
+          };
+        }
       }
+
       return ctx.prisma.users.update({
         where: {
           id: userId,
@@ -40,7 +40,7 @@ export const userProfile = createTRPCRouter({
         data: {
           firstName,
           lastName,
-          profileImg: uploadResponse.secure_url,
+          ...(uploadedImageUrl && { profileImg: uploadedImageUrl }),
         },
       });
     }),
