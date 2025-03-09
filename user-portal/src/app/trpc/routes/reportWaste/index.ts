@@ -100,7 +100,6 @@ export const reportWaste = createTRPCRouter({
           isRead: false,
         },
       });
-
       return {
         message:
           "Waste Submitted Successfully, Leaderboard Updated, and Notification Created",

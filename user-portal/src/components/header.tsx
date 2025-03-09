@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import logo from "../assets/images/logo.png";
 import { UseMediaQuery } from "./hooks/useMediaQuery";
 import { useRouter } from "next/navigation";
+import { api } from "@/trpc-server/react";
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -25,11 +26,14 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onMenuClick, totalEarnings }) => {
+  const { data } = api.notification.getAllNotification.useQuery();
+  const { mutateAsync: markAsRead } =
+    api.notification.markAllNotificationsAsRead.useMutation();
   const isMobile = UseMediaQuery("(max-width: 768px)");
-  const notifications: any[] = ["waqar", "Ahmed"];
+  const notifications = data?.data || [];
   const router = useRouter();
-  const handleNotificationClick = (id: string) => {
-    
+  const handleNotificationClick = () => {
+    markAsRead();
   };
 
   const handleLogout = async () => {
@@ -80,32 +84,41 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick, totalEarnings }) => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="relative">
-                <Bell className="h-5 w-5 text-green-700" />
-                {notifications.length > 0 && (
+                <Bell
+                  className="h-5 w-5 text-green-700"
+                  onClick={() => handleNotificationClick}
+                />
+                {notifications?.length > 0 && (
                   <Badge
                     variant="destructive"
                     className="absolute -right-1 -top-1 h-5 w-5 items-center justify-center rounded-full p-0"
                   >
-                    {notifications.length}
+                    {notifications?.length}
                   </Badge>
                 )}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-64">
-              {notifications.length > 0 ? (
-                notifications.map((item) => (
+              {notifications?.length > 0 ? (
+                <>
                   <DropdownMenuItem
-                    key={item.id}
-                    onClick={() => handleNotificationClick(item.id)}
+                    onClick={handleNotificationClick}
+                    className="text-green-700 font-medium cursor-pointer"
                   >
-                    <div className="flex flex-col">
-                      <span className="font-medium">{item.type}</span>
-                      <span className="text-sm text-green-600">
-                        {item.message}
-                      </span>
-                    </div>
+                    ✅ Mark All as Read
                   </DropdownMenuItem>
-                ))
+                  <DropdownMenuSeparator />
+                  {notifications.map((item) => (
+                    <DropdownMenuItem key={item.id}>
+                      <div className="flex flex-col">
+                        <span className="font-medium">{item.type}</span>
+                        <span className="text-sm text-green-600">
+                          {item.message}
+                        </span>
+                      </div>
+                    </DropdownMenuItem>
+                  ))}
+                </>
               ) : (
                 <DropdownMenuItem>No new notifications</DropdownMenuItem>
               )}
